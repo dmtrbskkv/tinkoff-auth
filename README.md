@@ -56,13 +56,17 @@ $linkWithScope = $tinkoff->getAuthURL('https://myintegration.ru/auth/complete', 
 пользователе
 
 ```php
+use \TinkoffAuth\Facades\Tinkoff;
+
+$tinkoff = new Tinkoff();
+
 $mediator = $tinkoff->auth();
 if (!$mediator->getStatus()) {
     $errorMessage = $mediator->getMessage();
     // Обработать ошибку
 }
 
-$credentials = $mediator->getBody();
+$credentials = $mediator->getPayload();
 // Обработать данные пользователя
 ```
 
@@ -109,5 +113,5 @@ if (count($userinfo) === 0) {
     // Если пользовательских данных не найдено
 }
 
-
+// Обработать пользовательские данные
 ```
