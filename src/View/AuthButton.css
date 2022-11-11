@@ -1,0 +1,55 @@
+.button-tinkoff-auth {
+    font-family: 'Neue Haas', 'Helvetica', sans-serif;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 14px;
+    color: #000;
+    border-radius: 8px;
+    background: #FFDD2D;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 0;
+    width: 220px;
+    box-sizing: border-box
+}
+
+.button-tinkoff-auth-small {
+    font-size: 10px;
+    padding: 8px 10px;
+    width: 170px;
+}
+
+.button-tinkoff-auth-large {
+    font-size: 18px;
+    padding: 16px 20px;
+    width: 290px;
+}
+
+.button-tinkoff-auth svg {
+    width: 38px;
+    height: auto
+}
+
+.button-tinkoff-auth-small svg {
+    width: 27px;
+}
+
+.button-tinkoff-auth-large svg {
+    width: 47px;
+}
+
+.button-tinkoff-auth span {
+    padding-right: 7px;
+    padding-top: 2px;
+    opacity: 0.8;
+}
+
+.button-tinkoff-auth-small span {
+    padding-right: 5px;
+}
+
+.button-tinkoff-auth-large span {
+    padding-right: 9px;
+}
