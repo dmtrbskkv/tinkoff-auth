@@ -2,16 +2,8 @@
 
 namespace TinkoffAuth\View\WordPress;
 
-use TinkoffAuth\View\Component;
-
-class SettingInput extends Component
+class SettingInput extends WordPressComponent
 {
-    private string $optionName;
-
-    public function __construct($optionName)
-    {
-        $this->optionName = $optionName;
-    }
 
     public function render(): string
     {

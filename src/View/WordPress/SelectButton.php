@@ -3,9 +3,8 @@
 namespace TinkoffAuth\View\WordPress;
 
 use TinkoffAuth\View\AuthButton;
-use TinkoffAuth\View\Component;
 
-class SelectButton extends Component
+class SelectButton extends WordPressComponent
 {
     const SELECT_HOOK_VALUES          = [
         'Самостоятельно расположить' => '',
@@ -25,13 +24,12 @@ class SelectButton extends Component
         'Маленькая кнопка'   => AuthButton::BUTTON_SIZE_SMALL
     ];
 
-    private string $optionName;
     private array $values;
 
     public function __construct($optionName, $values = [])
     {
-        $this->optionName = $optionName;
-        $this->values     = $values;
+        parent::__construct($optionName);
+        $this->values = $values;
     }
 
     public function render(): string

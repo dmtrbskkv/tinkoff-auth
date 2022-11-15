@@ -1,5 +1,6 @@
 <?php
 
+use TinkoffAuth\View\WordPress\CheckboxInput;
 use TinkoffAuth\View\WordPress\SelectButton;
 use TinkoffAuth\View\WordPress\SettingInput;
 
@@ -7,15 +8,21 @@ function tinkoff_auth_credentials_settings_init() {
 	register_setting( 'tinkoff_auth', 'tinkoff_auth_client_id', [ 'type' => 'string' ] );
 	register_setting( 'tinkoff_auth', 'tinkoff_auth_client_secret', [ 'type' => 'string' ] );
 
-	register_setting( 'tinkoff_auth',
+	register_setting(
+		'tinkoff_auth',
 		'tinkoff_auth_button_hook',
-		[ 'type' => 'string', 'default' => 'woocommerce_login_form_end' ] );
+		[ 'type' => 'string', 'default' => 'woocommerce_login_form_end' ]
+	);
 
-	register_setting( 'tinkoff_auth',
+	register_setting(
+		'tinkoff_auth',
 		'tinkoff_auth_button_hook_checkout',
-		[ 'type' => 'string' ] );
+		[ 'type' => 'string' ]
+	);
 
 	register_setting( 'tinkoff_auth', 'tinkoff_auth_button_size', [ 'type' => 'string' ] );
+
+	register_setting( 'tinkoff_auth', 'tinkoff_auth_compatibility_iiko', [ 'type' => 'boolean' ] );
 
 	add_settings_section(
 		'tinkoff_auth_section_credentials',
@@ -28,6 +35,13 @@ function tinkoff_auth_credentials_settings_init() {
 		'tinkoff_auth_section_visual',
 		'Настройки кнопки',
 		'tinkoff_auth_section_visual_callback',
+		'tinkoff-auth-settings-page'
+	);
+
+	add_settings_section(
+		'tinkoff_auth_section_compatibility',
+		'Совместимость с плагинами',
+		'tinkoff_auth_section_compatibility_callback',
 		'tinkoff-auth-settings-page'
 	);
 
@@ -69,6 +83,14 @@ function tinkoff_auth_credentials_settings_init() {
 		'tinkoff-auth-settings-page',
 		'tinkoff_auth_section_visual',
 	);
+
+	add_settings_field(
+		'tinkoff_auth_compatibility_iiko',
+		'Добавление мета полей iiko',
+		'tinkoff_auth_compatibility_iiko_callback',
+		'tinkoff-auth-settings-page',
+		'tinkoff_auth_section_compatibility',
+	);
 }
 
 function tinkoff_auth_section_credentials_callback( $args ) {
@@ -78,6 +100,10 @@ function tinkoff_auth_section_credentials_callback( $args ) {
 
 function tinkoff_auth_section_visual_callback() {
 	echo '<p>Можете выбрать расположение кнопки в шаблоне, либо самостоятельно использовать шордкод "[tinkoff-button]"</p>';
+}
+
+function tinkoff_auth_section_compatibility_callback() {
+	echo '<p>При необходимости, вы можете включить совместимость с некоторыми сторонними плагинами</p>';
 }
 
 function tinkoff_auth_client_id_callback( $args ) {
@@ -93,12 +119,18 @@ function tinkoff_auth_button_hook_callback() {
 }
 
 function tinkoff_auth_button_hook_checkout_callback() {
-	echo ( new SelectButton( 'tinkoff_auth_button_hook_checkout',
-		SelectButton::SELECT_HOOK_CHECKOUT_VALUES ) )->render();
+	echo ( new SelectButton(
+		'tinkoff_auth_button_hook_checkout',
+		SelectButton::SELECT_HOOK_CHECKOUT_VALUES
+	) )->render();
 }
 
 function tinkoff_auth_button_size_callback() {
 	echo ( new SelectButton( 'tinkoff_auth_button_size', SelectButton::SELECT_BUTTON_SIZE_VALUES ) )->render();
+}
+
+function tinkoff_auth_compatibility_iiko_callback() {
+	echo ( new CheckboxInput( 'tinkoff_auth_compatibility_iiko' ) )->render();
 }
 
 function tinkoff_auth_settings_init() {

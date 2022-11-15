@@ -10,8 +10,6 @@ add_action( 'rest_api_init', function () {
 } );
 
 function tinkoff_auth_callback( WP_REST_Request $request ) {
-	$account_location = get_permalink( get_option( 'woocommerce_myaccount_page_id' ) );
-
 	$response = new WP_REST_Response();
 	$response->set_status( 307 );
 
@@ -76,12 +74,14 @@ function tinkoff_auth_callback( WP_REST_Request $request ) {
 	update_user_meta( $user_id, 'last_name', $credentials['family_name'] ?? '' );
 
 	// Плагин iiko
-	update_user_meta( $user_id, 'iiko_email', $credentials['email'] ?? '' );
-	update_user_meta( $user_id, 'iiko_name', $credentials['given_name'] ?? '' );
-	update_user_meta( $user_id, 'iiko_middleName', $credentials['middle_name'] ?? '' );
-	update_user_meta( $user_id, 'iiko_middleName', $credentials['middle_name'] ?? '' );
-	update_user_meta( $user_id, 'iiko_surName', $credentials['family_name'] ?? '' );
-	update_user_meta( $user_id, 'iiko_phone', $username );
+	if ( get_option( 'tinkoff_auth_compatibility_iiko' ) ) {
+		update_user_meta( $user_id, 'iiko_email', $credentials['email'] ?? '' );
+		update_user_meta( $user_id, 'iiko_name', $credentials['given_name'] ?? '' );
+		update_user_meta( $user_id, 'iiko_middleName', $credentials['middle_name'] ?? '' );
+		update_user_meta( $user_id, 'iiko_middleName', $credentials['middle_name'] ?? '' );
+		update_user_meta( $user_id, 'iiko_surName', $credentials['family_name'] ?? '' );
+		update_user_meta( $user_id, 'iiko_phone', $username );
+	}
 
 	// Билинг
 	update_user_meta( $user_id, 'billing_first_name', $credentials['given_name'] ?? '' );
