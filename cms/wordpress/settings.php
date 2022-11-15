@@ -6,9 +6,15 @@ use TinkoffAuth\View\WordPress\SettingInput;
 function tinkoff_auth_credentials_settings_init() {
 	register_setting( 'tinkoff_auth', 'tinkoff_auth_client_id', [ 'type' => 'string' ] );
 	register_setting( 'tinkoff_auth', 'tinkoff_auth_client_secret', [ 'type' => 'string' ] );
+
 	register_setting( 'tinkoff_auth',
 		'tinkoff_auth_button_hook',
 		[ 'type' => 'string', 'default' => 'woocommerce_login_form_end' ] );
+
+	register_setting( 'tinkoff_auth',
+		'tinkoff_auth_button_hook_checkout',
+		[ 'type' => 'string' ] );
+
 	register_setting( 'tinkoff_auth', 'tinkoff_auth_button_size', [ 'type' => 'string' ] );
 
 	add_settings_section(
@@ -42,11 +48,20 @@ function tinkoff_auth_credentials_settings_init() {
 
 	add_settings_field(
 		'tinkoff_auth_button_hook',
-		'Расположение кнопки',
+		'Расположение кнопки на странице авторизации',
 		'tinkoff_auth_button_hook_callback',
 		'tinkoff-auth-settings-page',
 		'tinkoff_auth_section_visual',
 	);
+
+	add_settings_field(
+		'tinkoff_auth_button_hook_checkout',
+		'Расположение кнопки на странице оформления заказа',
+		'tinkoff_auth_button_hook_checkout_callback',
+		'tinkoff-auth-settings-page',
+		'tinkoff_auth_section_visual',
+	);
+
 	add_settings_field(
 		'tinkoff_auth_button_size',
 		'Размер кнопки',
@@ -75,6 +90,11 @@ function tinkoff_auth_client_secret_callback( $args ) {
 
 function tinkoff_auth_button_hook_callback() {
 	echo ( new SelectButton( 'tinkoff_auth_button_hook', SelectButton::SELECT_HOOK_VALUES ) )->render();
+}
+
+function tinkoff_auth_button_hook_checkout_callback() {
+	echo ( new SelectButton( 'tinkoff_auth_button_hook_checkout',
+		SelectButton::SELECT_HOOK_CHECKOUT_VALUES ) )->render();
 }
 
 function tinkoff_auth_button_size_callback() {

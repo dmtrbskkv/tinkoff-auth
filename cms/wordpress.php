@@ -29,5 +29,13 @@ add_action( $button_hook, function () {
 	echo do_shortcode( '[tinkoff-button]' );
 } );
 
+
+$button_hook = get_option( 'tinkoff_auth_button_hook_checkout' );
+add_action( $button_hook, function () {
+	if ( get_current_user_id() === 0 ) {
+		echo do_shortcode( '[tinkoff-button]' );
+	}
+} );
+
 require_once __DIR__ . '/wordpress/endpoints.php';
 

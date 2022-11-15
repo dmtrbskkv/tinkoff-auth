@@ -7,13 +7,19 @@ use TinkoffAuth\View\Component;
 
 class SelectButton extends Component
 {
-    const SELECT_HOOK_VALUES        = [
+    const SELECT_HOOK_VALUES          = [
         'Самостоятельно расположить' => '',
         'Внутри формы регистрации'   => 'woocommerce_login_form',
         'Ниже формы регистрации'     => 'woocommerce_login_form_end',
         'Выше формы регистрации'     => 'woocommerce_login_form_start'
     ];
-    const SELECT_BUTTON_SIZE_VALUES = [
+    const SELECT_HOOK_CHECKOUT_VALUES = [
+        'Самостоятельно расположить' => '',
+        'Выше деталей заказа'        => 'woocommerce_checkout_billing',
+        'Внутри деталей заказа'      => 'woocommerce_checkout_shipping',
+        'После деталей заказа'       => 'woocommerce_checkout_after_customer_details',
+    ];
+    const SELECT_BUTTON_SIZE_VALUES   = [
         'Стандартная кнопка' => AuthButton::BUTTON_SIZE_DEFAULT,
         'Большая кнопка'     => AuthButton::BUTTON_SIZE_LARGE,
         'Маленькая кнопка'   => AuthButton::BUTTON_SIZE_SMALL
