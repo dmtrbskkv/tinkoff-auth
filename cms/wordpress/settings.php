@@ -19,7 +19,7 @@ function tinkoff_auth_credentials_settings_init() {
 
 	add_settings_section(
 		'tinkoff_auth_section_credentials',
-		'Данные для авторизации в API Тинькофф',
+		'Данные для авторизации в API Тинькофф ID',
 		'tinkoff_auth_section_credentials_callback',
 		'tinkoff-auth-settings-page'
 	);
@@ -48,7 +48,7 @@ function tinkoff_auth_credentials_settings_init() {
 
 	add_settings_field(
 		'tinkoff_auth_button_hook',
-		'Расположение кнопки на странице авторизации',
+		'Расположение на странице авторизации',
 		'tinkoff_auth_button_hook_callback',
 		'tinkoff-auth-settings-page',
 		'tinkoff_auth_section_visual',
@@ -56,7 +56,7 @@ function tinkoff_auth_credentials_settings_init() {
 
 	add_settings_field(
 		'tinkoff_auth_button_hook_checkout',
-		'Расположение кнопки на странице оформления заказа',
+		'Расположение на странице оформления заказа',
 		'tinkoff_auth_button_hook_checkout_callback',
 		'tinkoff-auth-settings-page',
 		'tinkoff_auth_section_visual',

@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h1>Настройки авторизации через Тинькофф</h1>
+    <h1>Настройки авторизации через Тинькофф ID</h1>
 
     <form method="post" action="options.php" novalidate="novalidate">
 		<?php
