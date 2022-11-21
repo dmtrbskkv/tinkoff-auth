@@ -9,19 +9,19 @@ class Cookies extends Provider
     public function createState(): bool
     {
         $this->state = bin2hex(random_bytes(20));
-        setcookie(self::COOKIE_NAME, $this->state, time() + 60 * 60, '/');
+        setcookie(self::COOKIE_NAME, $this->state, time() + 60 * 60, '/', "", true);
 
         return true;
     }
 
-    public function validateState($string): bool
+    public function validateState(string $string = null): bool
     {
         $cookieState = $_COOKIE[self::COOKIE_NAME] ?? null;
         if (is_null($cookieState)) {
             return false;
         }
 
-        return $cookieState == $string;
+        return $cookieState === $string;
     }
 
 }

@@ -18,7 +18,7 @@ abstract class Provider
         return $this->state;
     }
 
-    public function validateState($string): bool
+    public function validateState(string $string = null): bool
     {
         return false;
     }
