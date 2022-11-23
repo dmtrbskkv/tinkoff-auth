@@ -8,7 +8,7 @@ class Request
     private string $domain = '';
     private array $headers = [];
 
-    public function __construct($domain)
+    public function __construct($domain = '')
     {
         $this->curl = curl_init();
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
@@ -17,7 +17,7 @@ class Request
         curl_setopt($this->curl, CURLOPT_HEADER, true);
         curl_setopt($this->curl, CURLOPT_TIMEOUT, 10);
         curl_setopt($this->curl, CURLOPT_MAXREDIRS, 10);
-        $this->domain = $domain;
+        $this->domain = $domain ?? '';
 
         $this->headers[] = 'cache-control: no-cache';
     }

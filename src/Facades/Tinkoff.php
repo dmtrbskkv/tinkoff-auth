@@ -15,13 +15,13 @@ class Tinkoff extends BaseFacade
     /**
      * Получение ссылки на авторизацию
      *
-     * @param $redirectURI
-     * @param $scopeParameters
+     * @param string|null $redirectURI
+     * @param array $scopeParameters
      *
      * @return string
      * @throws UnknownConfig
      */
-    public function getAuthURL($redirectURI = null, $scopeParameters = []): string
+    public function getAuthURL(string $redirectURI = null, array $scopeParameters = []): string
     {
         $authConfig = Auth::getInstance();
         if ( ! $redirectURI) {
@@ -68,7 +68,7 @@ class Tinkoff extends BaseFacade
         }
         $authConfig->push(Auth::ACCESS_TOKEN, $accessToken);
 
-        if ( ! $api->validateScopes($accessToken)) {
+        if ( ! $api->validateScopes(Api::SCOPES_FOR_AUTH, $accessToken)) {
             $mediator->setMessage('Пользователь предоставил недостаточно сведений');
 
             return $mediator;
@@ -91,6 +91,7 @@ class Tinkoff extends BaseFacade
      * Функция для получения данных пользователя
      *
      * @return FunctionMediator Промежуточный объект, для получения информации о получения данных пользователя
+     * @throws UnknownConfig
      */
     public function getUserprofile($accessToken = null): FunctionMediator
     {
@@ -99,7 +100,7 @@ class Tinkoff extends BaseFacade
 
         $api = new Api();
 
-        if ( ! $api->validateScopes($accessToken)) {
+        if ( ! $api->validateScopes(Api::SCOPES_FOR_AUTH, $accessToken)) {
             $mediator->setMessage('Пользователь предоставил недостаточно данных');
 
             return $mediator;

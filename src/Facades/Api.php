@@ -2,8 +2,10 @@
 
 namespace TinkoffAuth\Facades;
 
+use TinkoffAuth\Config\Api as ApiConfig;
 use TinkoffAuth\Config\Auth;
 use TinkoffAuth\Exceptions\UnknownConfig;
+use TinkoffAuth\Helpers\ApiFormatter;
 use TinkoffAuth\Services\Http\Request;
 use TinkoffAuth\Services\Http\Response;
 use TinkoffAuth\Services\State\State;
@@ -39,13 +41,27 @@ class Api extends BaseFacade
      * Получение scopes. Обертка над $this->introspect()
      *
      * @param string|null $accessToken Access Token полученный раннее
+     * @param bool $useConfig Использовать ли конфиг для получения данных
      *
      * @return array
      * @throws UnknownConfig
      */
-    public function getScopes(string $accessToken = null): array
+    public function getScopes(string $accessToken = null, bool $useConfig = true): array
     {
-        return $this->introspect($accessToken)['scope'];
+        $apiConfig = ApiConfig::getInstance();
+
+        $scope = $apiConfig->get(ApiConfig::USER_SCOPES);
+        if ($useConfig && $scope) {
+            return $scope;
+        }
+
+        $scope = $this->introspect($accessToken)['scope'];
+
+        if ($useConfig) {
+            $apiConfig->push(ApiConfig::USER_SCOPES, $scope);
+        }
+
+        return $scope;
     }
 
     /**
@@ -56,11 +72,15 @@ class Api extends BaseFacade
      * @return bool
      * @throws UnknownConfig
      */
-    public function validateScopes(string $accessToken = null): bool
+    public function validateScopes($scopeForCompare = [], string $accessToken = null): bool
     {
-        $scopes = $this->getScopes($accessToken);
-        foreach (self::SCOPES_FOR_AUTH as $scope) {
-            if ( ! in_array($scope, $scopes)) {
+        if ( ! $scopeForCompare) {
+            return false;
+        }
+
+        $scopesFromAPI = $this->getScopes($accessToken);
+        foreach ($scopeForCompare as $scope) {
+            if ( ! in_array($scope, $scopesFromAPI)) {
                 return false;
             }
         }
@@ -86,14 +106,14 @@ class Api extends BaseFacade
             return [];
         }
 
-        $request  = $this->createRequest();
+        $request  = $this->createTinkoffIDRequest();
         $response = $request->post('/auth/token', [
             'grant_type'   => 'authorization_code',
             'code'         => $code,
             'redirect_uri' => $authConfig->get(Auth::REDIRECT_URI)
         ]);
 
-        return $this->getTokenParams($response);
+        return ApiFormatter::formatTokenParams($response);
     }
 
     /**
@@ -108,13 +128,67 @@ class Api extends BaseFacade
     {
         $authConfig = Auth::getInstance();
 
-        $request  = $this->createUserprofileRequest($accessToken);
+        $request  = $this->createTinkoffIDBearerRequest($accessToken);
         $response = $request->post('/userinfo/userinfo', [
             'client_id'     => $authConfig->get(Auth::CLIENT_ID),
             'client_secret' => $authConfig->get(Auth::CLIENT_SECRET)
         ]);
 
         return $response->json();
+    }
+
+    /**
+     * Получение максимально возможной информации о пользователе
+     *
+     * @param string|null $accessToken
+     * @param array $replacement
+     *
+     * @return array
+     * @throws UnknownConfig
+     */
+    public function userinfoFull(string $accessToken = null, array $replacement = []): array
+    {
+        $authConfig = Auth::getInstance();
+        $apiConfig  = ApiConfig::getInstance();
+
+        $accessToken = $accessToken ?? $authConfig->get(Auth::ACCESS_TOKEN);
+        if ( ! $accessToken) {
+            return ApiFormatter::formatUserinfoFull();
+        }
+
+        $routes       = $apiConfig->getScopesURLs();
+        $neededScopes = $apiConfig->getScopes();
+
+        $userinfoFull = [];
+        foreach ($routes as $index => $route) {
+            $userHasNeededScopes = $this->validateScopes($neededScopes[$index] ?? []);
+            if ( ! $userHasNeededScopes) {
+                continue;
+            }
+
+            $request = new Request();
+            $request = $this->addBearerCredentials($request, $accessToken);
+
+            try {
+                $route = sprintf($route, ...($replacement[$index] ?? []));
+            }catch (\Exception $e){
+            }
+
+            switch ($index) {
+                case ApiConfig::SCOPES_USERINFO:
+                    $response = $request->post($route, [
+                        'client_id'     => $authConfig->get(Auth::CLIENT_ID),
+                        'client_secret' => $authConfig->get(Auth::CLIENT_SECRET)
+                    ]);
+                    break;
+                default:
+                    $response = $request->request($route);
+            }
+
+            $userinfoFull[$index] = $response->json();
+        }
+
+        return ApiFormatter::formatUserinfoFull($userinfoFull);
     }
 
     /**
@@ -132,12 +206,12 @@ class Api extends BaseFacade
             $accessToken = $authConfig->get(Auth::ACCESS_TOKEN);
         }
 
-        $request  = $this->createRequest();
+        $request  = $this->createTinkoffIDRequest();
         $response = $request->post('/auth/introspect', [
             'token' => $accessToken,
         ]);
 
-        return $this->getIntrospectParams($response);
+        return ApiFormatter::formatIntrospectParams($response);
     }
 
 
@@ -164,51 +238,6 @@ class Api extends BaseFacade
             'session_state' => $_GET['session_state'] ?? -1,
             'code'          => $_GET['code'] ?? null
         ];
-    }
-
-    /**
-     * Формирование параметров Access Token
-     *
-     * @param Response $response
-     *
-     * @return array
-     * @throws UnknownConfig
-     */
-    public function getTokenParams(Response $response): array
-    {
-        $result = $response->json();
-
-        $accessToken = $result['access_token'] ?? null;
-        if ($accessToken) {
-            $authConfig = Auth::getInstance();
-            $authConfig->push(Auth::ACCESS_TOKEN, $accessToken);
-        }
-
-        return [
-            'access_token'  => $accessToken,
-            'token_type'    => $result['token_type'] ?? 'Bearer',
-            'expires_in'    => $result['expires_in'] ?? 0,
-            'refresh_token' => $result['refresh_token'] ?? null,
-        ];
-    }
-
-    /**
-     * Формирование параметров Introspect
-     *
-     * @param Response $response
-     *
-     * @return array
-     */
-    public function getIntrospectParams(Response $response): array
-    {
-        $result = $response->json();
-
-        return array_merge([
-            'active'    => false,
-            'scope'     => [],
-            'client_id' => null,
-            'iss'       => null,
-        ], $result);
     }
 
     /**
@@ -254,12 +283,12 @@ class Api extends BaseFacade
     }
 
     /**
-     * Создание обыночного запроса с Base авторизацией
+     * Создание запроса https://id.tinkoff.ru с Base авторизацией
      *
      * @return Request
      * @throws UnknownConfig
      */
-    private function createRequest(): Request
+    private function createTinkoffIDRequest(): Request
     {
         $request = new Request('https://id.tinkoff.ru/');
 
@@ -267,14 +296,14 @@ class Api extends BaseFacade
     }
 
     /**
-     * Создание запроса для получения данных пользователя с Bearer авторизацией
+     * Создание запроса https://id.tinkoff.ru с Bearer авторизацией. Для получения данных пользовтаеля
      *
      * @param $accessToken
      *
      * @return Request
      * @throws UnknownConfig
      */
-    private function createUserprofileRequest($accessToken = null): Request
+    private function createTinkoffIDBearerRequest($accessToken = null): Request
     {
         $request = new Request('https://id.tinkoff.ru/');
 
