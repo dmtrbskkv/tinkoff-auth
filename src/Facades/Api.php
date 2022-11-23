@@ -6,6 +6,7 @@ use TinkoffAuth\Config\Api as ApiConfig;
 use TinkoffAuth\Config\Auth;
 use TinkoffAuth\Exceptions\UnknownConfig;
 use TinkoffAuth\Helpers\ApiFormatter;
+use TinkoffAuth\Helpers\ApiHelper;
 use TinkoffAuth\Services\Http\Request;
 use TinkoffAuth\Services\Http\Response;
 use TinkoffAuth\Services\State\State;
@@ -67,25 +68,17 @@ class Api extends BaseFacade
     /**
      * Проверка scopes
      *
+     * @param array $scopeForCompare
      * @param string|null $accessToken Access Token полученный раннее
      *
      * @return bool
      * @throws UnknownConfig
      */
-    public function validateScopes($scopeForCompare = [], string $accessToken = null): bool
+    public function validateScopes(array $scopeForCompare = [], string $accessToken = null): bool
     {
-        if ( ! $scopeForCompare) {
-            return false;
-        }
+        $userScopes = $this->getScopes($accessToken);
 
-        $scopesFromAPI = $this->getScopes($accessToken);
-        foreach ($scopeForCompare as $scope) {
-            if ( ! in_array($scope, $scopesFromAPI)) {
-                return false;
-            }
-        }
-
-        return true;
+        return ApiHelper::validateScopes($userScopes, $scopeForCompare);
     }
 
     /**
@@ -171,7 +164,7 @@ class Api extends BaseFacade
 
             try {
                 $route = sprintf($route, ...($replacement[$index] ?? []));
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
             }
 
             switch ($index) {
