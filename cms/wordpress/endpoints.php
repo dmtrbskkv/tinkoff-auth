@@ -11,62 +11,57 @@ add_action( 'rest_api_init', function () {
 } );
 
 function tinkoff_auth_callback( WP_REST_Request $request ) {
-	$response = new WP_REST_Response();
-	$response->set_status( 307 );
-
+	// Получение данных пользователя
 	$tinkoff  = new Tinkoff();
 	$mediator = $tinkoff->auth();
 	if ( ! $mediator->getStatus() ) {
-		$response->header( 'Location', tinkoff_auth_helper_format_redirect_url( false, 'Ошибка авторизации' ) );
-
-		return $response;
+		return tinkoff_auth_helper_build_response( false, 'Ошибка авторизации' );
 	}
 
 	$credentials = $mediator->getPayload();
 
-    $userinfo = $credentials[Api::SCOPES_USERINFO];
+	// Основная информация о пользователе
+	$userinfo = $credentials[ Api::SCOPES_USERINFO ];
 
-    $passportShort = $credentials[Api::SCOPES_PASSPORT_SHORT];
-    $passportFull = $credentials[Api::SCOPES_PASSPORT];
-    $passport = array_merge($passportShort, $passportFull);
+	// Паспорт пользователя
+	$passportShort = $credentials[ Api::SCOPES_PASSPORT_SHORT ];
+	$passportFull  = $credentials[ Api::SCOPES_PASSPORT ];
+	$passport      = array_merge( $passportShort, $passportFull );
 
-    $driveLicenses = $credentials[Api::SCOPES_DRIVER_LICENSES];
+	// Водительские права
+	$driveLicenses = $credentials[ Api::SCOPES_DRIVER_LICENSES ];
 
-    $inn = $credentials[Api::SCOPES_INN];
-    $snils = $credentials[Api::SCOPES_SNILS];
+	// ИНН и Снилс
+	$inn   = $credentials[ Api::SCOPES_INN ];
+	$snils = $credentials[ Api::SCOPES_SNILS ];
 
-    $isIdentified = $credentials[Api::SCOPES_IDENTIFICATION];
-    $isSelfEmployed = $credentials[Api::SCOPES_SELF_EMPLOYED_STATUS];
+	//Информации об идентификации и самозанятости
+	$isIdentified   = $credentials[ Api::SCOPES_IDENTIFICATION ];
+	$isSelfEmployed = $credentials[ Api::SCOPES_SELF_EMPLOYED_STATUS ];
 
-    $addresses = $credentials[Api::SCOPES_ADDRESSES];
+	// Адреса
+	$addresses = $credentials[ Api::SCOPES_ADDRESSES ];
 
-    $debitCards = $credentials[Api::SCOPES_DEBIT_CARDS];
-    $subscription = $credentials[Api::SCOPES_SUBSCRIPTION];
-    $cobrand = $credentials[Api::SCOPES_COBRAND_STATUS];
+	// Дебетовые карты, подписка и собренд
+	$debitCards   = $credentials[ Api::SCOPES_DEBIT_CARDS ];
+	$subscription = $credentials[ Api::SCOPES_SUBSCRIPTION ];
+	$cobrand      = $credentials[ Api::SCOPES_COBRAND_STATUS ];
 
-	$email       = $userinfo['email'] ?? null;
-	$username    = str_replace( [ '+', ' ', '-' ], '', $userinfo['phone_number'] ) ?? null;
-	$password    = md5( time() . rand( 0, 100 ) . rand( 0, 200 ) );
+	// Формирование почты, имени пользователя и пароля
+	$email    = $userinfo['email'] ?? null;
+	$username = str_replace( [ '+', ' ', '-' ], '', $userinfo['phone_number'] ) ?? null;
+	$password = md5( time() . rand( 0, 100 ) . rand( 0, 200 ) );
 
 	if ( ! $email || ! $username ) {
-		$response->header(
-			'Location',
-			tinkoff_auth_helper_format_redirect_url( false, 'Предоставленных данных недостаточно' )
-		);
-
-		return $response;
+		return tinkoff_auth_helper_build_response( false, 'Предоставленных данных недостаточно' );
 	}
 
+	// Создание пользователя
 	$user = get_user_by( 'login', $username );
 	if ( $user !== false ) {
 		$is_tinkoff_user = $user->get( 'is_tinkoff' );
 		if ( ! $is_tinkoff_user ) {
-			$response->header(
-				'Location',
-				tinkoff_auth_helper_format_redirect_url( false, 'Пользователь с такой почтой уже существует' )
-			);
-
-			return $response;
+			return tinkoff_auth_helper_build_response( false, 'Пользователь с такой почтой уже существует' );
 		}
 
 		$user_id = $user->get( 'id' );
@@ -81,12 +76,7 @@ function tinkoff_auth_callback( WP_REST_Request $request ) {
 		}
 
 		if ( ! $user_id || is_wp_error( $user_id ) ) {
-			$response->header(
-				'Location',
-				tinkoff_auth_helper_format_redirect_url( false, 'Ошибка при создании пользователя' )
-			);
-
-			return $response;
+			return tinkoff_auth_helper_build_response( false, 'Ошибка при создании пользователя' );
 		}
 	}
 
@@ -109,8 +99,8 @@ function tinkoff_auth_callback( WP_REST_Request $request ) {
 	update_user_meta( $user_id, 'billing_first_name', $userinfo['given_name'] ?? '' );
 	update_user_meta( $user_id, 'billing_phone', $username );
 
-    // Дополнительные данные от Тинькофф
-    update_user_meta( $user_id, 'tinkof_auth_passport', $passport );
+	// Дополнительные данные от Тинькофф
+	update_user_meta( $user_id, 'tinkof_auth_passport', $passport );
 	update_user_meta( $user_id, 'tinkof_auth_drive_licenses', $driveLicenses );
 	update_user_meta( $user_id, 'tinkof_auth_inn', $inn );
 	update_user_meta( $user_id, 'tinkof_auth_snils', $snils );
@@ -121,15 +111,39 @@ function tinkoff_auth_callback( WP_REST_Request $request ) {
 	update_user_meta( $user_id, 'tinkof_auth_subscription', $subscription );
 	update_user_meta( $user_id, 'tinkof_auth_cobrand', $cobrand );
 
+	// Авторизация
 	wp_set_auth_cookie( $user_id );
 
-	$response->header( 'Location', tinkoff_auth_helper_format_redirect_url() );
-
-	return $response;
+	return tinkoff_auth_helper_build_response( true );
 }
 
+/**
+ * Формирование Redirect URL
+ *
+ * @param $status
+ * @param $message
+ *
+ * @return string
+ */
 function tinkoff_auth_helper_format_redirect_url( $status = true, $message = '' ) {
 	$account_location = get_permalink( get_option( 'woocommerce_myaccount_page_id' ) );
 
 	return $account_location . '?' . http_build_query( [ 'status' => $status, 'message' => $message ] );
+}
+
+/**
+ * Форомирование ответа
+ *
+ * @param $status
+ * @param $message
+ *
+ * @return WP_REST_Response
+ */
+function tinkoff_auth_helper_build_response( $status = true, $message = '' ) {
+	$response = new WP_REST_Response();
+	$response->set_status( 307 );
+
+	$response->header( 'Location', tinkoff_auth_helper_format_redirect_url( $status, $message ) );
+
+	return $response;
 }
