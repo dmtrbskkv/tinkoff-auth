@@ -117,11 +117,6 @@ use \TinkoffAuth\Facades\Api();
 
 use \TinkoffAuth\Config\Api as ApiConfig;
 
-// Можно выбрать где хранить State в куках или сессии
-$stateConfig = State::getInstance();
-$stateConfig->push(State::PROVIDER, Session::class)
-$stateConfig->push(State::PROVIDER, Cookies::class)
-
 // Создаем объект для работы с API
 $api = new Api();
 // Указываем необходимость проверки State
