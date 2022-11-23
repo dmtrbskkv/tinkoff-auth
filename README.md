@@ -1,5 +1,7 @@
 ## WordPress
+
 ### Настройка плагина
+
 Вся настройка плагина производится во вкладке "Настройки" в пункте "Тинькофф"
 
 ## Standalone
@@ -19,12 +21,23 @@
 ```php
 use TinkoffAuth\Config\Auth;
 
+use \TinkoffAuth\Config\State;
+use \TinkoffAuth\Services\State\Providers\Session;
+use \TinkoffAuth\Services\State\Providers\Cookies;
+
+
 require_once __DIR__.'/../vendor/autoload.php';
 
+// Настройка данных для авторизации 
 $authConfig = Auth::getInstance();
 $authConfig->push(Auth::CLIENT_ID, 'client_id');
 $authConfig->push(Auth::CLIENT_SECRET, 'client_secret');
 $authConfig->push(Auth::REDIRECT_URI, 'https://myintegration.ru/auth/complete')
+
+// Настройка места хранения стейта
+$stateConfig = State::getInstance();
+$stateConfig->push(State::PROVIDER, Session::class)
+$stateConfig->push(State::PROVIDER, Cookies::class)
 ```
 
 ### Получение ссылки для авторизации
@@ -47,6 +60,18 @@ $linkWithScope = $tinkoff->getAuthURL('https://myintegration.ru/auth/complete', 
 ]);
 ```
 
+### Отображение кнопки
+Чтобы отобразить кнопку, можно вызвать класс `AuthButton` указав в нем ссылку на страницу авторизации
+```php
+//  Опционально можно указать размер кнопки
+$buttonSize = \TinkoffAuth\View\AuthButton::BUTTON_SIZE_SMALL;
+$buttonSize = \TinkoffAuth\View\AuthButton::BUTTON_SIZE_DEFAULT;
+$buttonSize = \TinkoffAuth\View\AuthButton::BUTTON_SIZE_LARGE;
+
+$button = new \TinkoffAuth\View\AuthButton($link, $buttonSize);
+echo $button;
+```
+
 ### Обработка данных после авторизации
 
 #### Упрощенный режим
@@ -57,6 +82,7 @@ $linkWithScope = $tinkoff->getAuthURL('https://myintegration.ru/auth/complete', 
 
 ```php
 use \TinkoffAuth\Facades\Tinkoff;
+use \TinkoffAuth\Config\Api;
 
 $tinkoff = new Tinkoff();
 
@@ -66,7 +92,11 @@ if (!$mediator->getStatus()) {
     // Обработать ошибку
 }
 
+// Массив всех данных с ключами из \TinkoffAuth\Config\Api
 $credentials = $mediator->getPayload();
+// Основные данные пользователя
+$userinfo = $credentials[Api::SCOPES_USERINFO]
+
 // Обработать данные пользователя
 ```
 
@@ -83,13 +113,17 @@ use \TinkoffAuth\Config\State;
 use \TinkoffAuth\Services\State\Providers\Session;
 use \TinkoffAuth\Services\State\Providers\Cookies;
 
+use \TinkoffAuth\Facades\Api();
+
+use \TinkoffAuth\Config\Api as ApiConfig;
+
 // Можно выбрать где хранить State в куках или сессии
 $stateConfig = State::getInstance();
 $stateConfig->push(State::PROVIDER, Session::class)
 $stateConfig->push(State::PROVIDER, Cookies::class)
 
 // Создаем объект для работы с API
-$api = new TinkoffAuth\Facades\Api();
+$api = new Api();
 // Указываем необходимость проверки State
 $validateState = true;
 
@@ -107,10 +141,16 @@ if (!$api->validateScopes($accessToken)) {
     // Если доступов недостаточно
 }
 
-// Получение данных пользователя
-$userinfo = $api->userinfo($accessToken);
-if (count($userinfo) === 0) {
-    // Если пользовательских данных не найдено
+// Можно получить краткую информацию о пользователе
+$userinfoShort = $api->userinfo($accessToken);
+if (count($userinfoShort) === 0) {
+    // Если основных пользовательских данных не найдено
+}
+
+// Либо полную, исходя из доступынх scopes
+$userinfo = $api->userinfoFull($accessToken);
+if (count($userinfo[ApiConfig::SCOPES_USERINFO]) === 0) {
+    // Если основных пользовательских данных не найдено
 }
 
 // Обработать пользовательские данные
