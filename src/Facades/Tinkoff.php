@@ -2,6 +2,7 @@
 
 namespace TinkoffAuth\Facades;
 
+use TinkoffAuth\Config\Api as ApiConfig;
 use TinkoffAuth\Config\Auth;
 use TinkoffAuth\Exceptions\UnknownConfig;
 use TinkoffAuth\Mediator\FunctionMediator;
@@ -51,7 +52,7 @@ class Tinkoff extends BaseFacade
      * @return FunctionMediator Промежуточный объект, для получения информации о статусе авторизации
      * @throws UnknownConfig
      */
-    public function auth(): FunctionMediator
+    public function auth($replacementForURL = []): FunctionMediator
     {
         $mediator = new FunctionMediator();
         $mediator->setStatus(false);
@@ -74,8 +75,8 @@ class Tinkoff extends BaseFacade
             return $mediator;
         }
 
-        $userinfo = $api->userinfo($accessToken);
-        if (count($userinfo) === 0) {
+        $userinfo = $api->userinfoFull($accessToken, $replacementForURL);
+        if (count($userinfo[ApiConfig::SCOPES_USERINFO]) === 0) {
             $mediator->setMessage('Ошибка при получении пользователя');
 
             return $mediator;
@@ -83,34 +84,6 @@ class Tinkoff extends BaseFacade
 
         $mediator->setStatus(true);
         $mediator->setPayload($userinfo);
-
-        return $mediator;
-    }
-
-    /**
-     * Функция для получения данных пользователя
-     *
-     * @return FunctionMediator Промежуточный объект, для получения информации о получения данных пользователя
-     * @throws UnknownConfig
-     */
-    public function getUserprofile($accessToken = null): FunctionMediator
-    {
-        $mediator = new FunctionMediator();
-        $mediator->setStatus(false);
-
-        $api = new Api();
-
-        if ( ! $api->validateScopes(Api::SCOPES_FOR_AUTH, $accessToken)) {
-            $mediator->setMessage('Пользователь предоставил недостаточно данных');
-
-            return $mediator;
-        }
-
-        $userinfo = $api->userinfo($accessToken);
-        if (count($userinfo) > 0) {
-            $mediator->setPayload($userinfo);
-            $mediator->setStatus(true);
-        }
 
         return $mediator;
     }

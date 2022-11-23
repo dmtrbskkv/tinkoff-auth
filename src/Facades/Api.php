@@ -45,7 +45,6 @@ class Api extends BaseFacade
      * @param bool $useConfig Использовать ли конфиг для получения данных
      *
      * @return array
-     * @throws UnknownConfig
      */
     public function getScopes(string $accessToken = null, bool $useConfig = true): array
     {
@@ -72,7 +71,6 @@ class Api extends BaseFacade
      * @param string|null $accessToken Access Token полученный раннее
      *
      * @return bool
-     * @throws UnknownConfig
      */
     public function validateScopes(array $scopeForCompare = [], string $accessToken = null): bool
     {
@@ -115,7 +113,6 @@ class Api extends BaseFacade
      * @param $accessToken
      *
      * @return array
-     * @throws UnknownConfig
      */
     public function userinfo($accessToken = null): array
     {
@@ -137,7 +134,6 @@ class Api extends BaseFacade
      * @param array $replacement
      *
      * @return array
-     * @throws UnknownConfig
      */
     public function userinfoFull(string $accessToken = null, array $replacement = []): array
     {
@@ -165,6 +161,7 @@ class Api extends BaseFacade
             try {
                 $route = sprintf($route, ...($replacement[$index] ?? []));
             } catch (\Exception $e) {
+                continue;
             }
 
             switch ($index) {
@@ -190,7 +187,6 @@ class Api extends BaseFacade
      * @param string|null $accessToken Access Token полученный раннее
      *
      * @return array
-     * @throws UnknownConfig
      */
     public function introspect(string $accessToken = null): array
     {
@@ -239,7 +235,6 @@ class Api extends BaseFacade
      * @param Request $request
      *
      * @return Request
-     * @throws UnknownConfig
      */
     public function addBaseAuthCredentials(Request $request): Request
     {
@@ -260,7 +255,6 @@ class Api extends BaseFacade
      * @param $accessToken
      *
      * @return Request
-     * @throws UnknownConfig
      */
     public function addBearerCredentials(Request $request, $accessToken = null): Request
     {
@@ -279,7 +273,6 @@ class Api extends BaseFacade
      * Создание запроса https://id.tinkoff.ru с Base авторизацией
      *
      * @return Request
-     * @throws UnknownConfig
      */
     private function createTinkoffIDRequest(): Request
     {
@@ -294,7 +287,6 @@ class Api extends BaseFacade
      * @param $accessToken
      *
      * @return Request
-     * @throws UnknownConfig
      */
     private function createTinkoffIDBearerRequest($accessToken = null): Request
     {

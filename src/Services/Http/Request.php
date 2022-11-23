@@ -57,7 +57,9 @@ class Request
 
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->headers);
 
-        $url = rtrim($this->domain, '/') . '/' . $url;
+        if ($this->domain){
+            $url = rtrim($this->domain, '/') . '/' . $url;
+        }
         curl_setopt($this->curl, CURLOPT_URL, $url);
 
         $response = curl_exec($this->curl);

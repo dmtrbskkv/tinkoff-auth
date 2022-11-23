@@ -36,6 +36,19 @@ class Api extends Config
         self::SCOPES_COBRAND_STATUS,
     ];
 
+    protected static ?Api $instance = null;
+
+    public static function getInstance(): Api
+    {
+        if (self::$instance) {
+            return self::$instance;
+        }
+
+        self::$instance = new self();
+
+        return self::getInstance();
+    }
+
     public function getScopes(): array
     {
         return [

@@ -16,6 +16,19 @@ class Auth extends Config
         self::ACCESS_TOKEN,
     ];
 
+    protected static ?Auth $instance = null;
+
+    public static function getInstance(): Auth
+    {
+        if (self::$instance) {
+            return self::$instance;
+        }
+
+        self::$instance = new self();
+
+        return self::getInstance();
+    }
+
     public function getUsername()
     {
         return $this->get(self::CLIENT_ID);

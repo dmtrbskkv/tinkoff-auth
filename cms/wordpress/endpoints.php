@@ -1,5 +1,6 @@
 <?php
 
+use TinkoffAuth\Config\Api;
 use TinkoffAuth\Facades\Tinkoff;
 
 add_action( 'rest_api_init', function () {
@@ -22,8 +23,29 @@ function tinkoff_auth_callback( WP_REST_Request $request ) {
 	}
 
 	$credentials = $mediator->getPayload();
-	$email       = $credentials['email'] ?? null;
-	$username    = str_replace( [ '+', ' ', '-' ], '', $credentials['phone_number'] ) ?? null;
+
+    $userinfo = $credentials[Api::SCOPES_USERINFO];
+
+    $passportShort = $credentials[Api::SCOPES_PASSPORT_SHORT];
+    $passportFull = $credentials[Api::SCOPES_PASSPORT];
+    $passport = array_merge($passportShort, $passportFull);
+
+    $driveLicenses = $credentials[Api::SCOPES_DRIVER_LICENSES];
+
+    $inn = $credentials[Api::SCOPES_INN];
+    $snils = $credentials[Api::SCOPES_SNILS];
+
+    $isIdentified = $credentials[Api::SCOPES_IDENTIFICATION];
+    $isSelfEmployed = $credentials[Api::SCOPES_SELF_EMPLOYED_STATUS];
+
+    $addresses = $credentials[Api::SCOPES_ADDRESSES];
+
+    $debitCards = $credentials[Api::SCOPES_DEBIT_CARDS];
+    $subscription = $credentials[Api::SCOPES_SUBSCRIPTION];
+    $cobrand = $credentials[Api::SCOPES_COBRAND_STATUS];
+
+	$email       = $userinfo['email'] ?? null;
+	$username    = str_replace( [ '+', ' ', '-' ], '', $userinfo['phone_number'] ) ?? null;
 	$password    = md5( time() . rand( 0, 100 ) . rand( 0, 200 ) );
 
 	if ( ! $email || ! $username ) {
@@ -70,22 +92,34 @@ function tinkoff_auth_callback( WP_REST_Request $request ) {
 
 	// Профиль WP
 	update_user_meta( $user_id, 'is_tinkoff', true );
-	update_user_meta( $user_id, 'first_name', $credentials['given_name'] ?? '' );
-	update_user_meta( $user_id, 'last_name', $credentials['family_name'] ?? '' );
+	update_user_meta( $user_id, 'first_name', $userinfo['given_name'] ?? '' );
+	update_user_meta( $user_id, 'last_name', $userinfo['family_name'] ?? '' );
 
 	// Плагин iiko
 	if ( get_option( 'tinkoff_auth_compatibility_iiko' ) ) {
-		update_user_meta( $user_id, 'iiko_email', $credentials['email'] ?? '' );
-		update_user_meta( $user_id, 'iiko_name', $credentials['given_name'] ?? '' );
-		update_user_meta( $user_id, 'iiko_middleName', $credentials['middle_name'] ?? '' );
-		update_user_meta( $user_id, 'iiko_middleName', $credentials['middle_name'] ?? '' );
-		update_user_meta( $user_id, 'iiko_surName', $credentials['family_name'] ?? '' );
+		update_user_meta( $user_id, 'iiko_email', $userinfo['email'] ?? '' );
+		update_user_meta( $user_id, 'iiko_name', $userinfo['given_name'] ?? '' );
+		update_user_meta( $user_id, 'iiko_middleName', $userinfo['middle_name'] ?? '' );
+		update_user_meta( $user_id, 'iiko_middleName', $userinfo['middle_name'] ?? '' );
+		update_user_meta( $user_id, 'iiko_surName', $userinfo['family_name'] ?? '' );
 		update_user_meta( $user_id, 'iiko_phone', $username );
 	}
 
 	// Билинг
-	update_user_meta( $user_id, 'billing_first_name', $credentials['given_name'] ?? '' );
+	update_user_meta( $user_id, 'billing_first_name', $userinfo['given_name'] ?? '' );
 	update_user_meta( $user_id, 'billing_phone', $username );
+
+    // Дополнительные данные от Тинькофф
+    update_user_meta( $user_id, 'tinkof_auth_passport', $passport );
+	update_user_meta( $user_id, 'tinkof_auth_drive_licenses', $driveLicenses );
+	update_user_meta( $user_id, 'tinkof_auth_inn', $inn );
+	update_user_meta( $user_id, 'tinkof_auth_snils', $snils );
+	update_user_meta( $user_id, 'tinkof_auth_is_identified', $isIdentified );
+	update_user_meta( $user_id, 'tinkof_auth_is_self_employed', $isSelfEmployed );
+	update_user_meta( $user_id, 'tinkof_auth_addresses', $addresses );
+	update_user_meta( $user_id, 'tinkof_auth_debitCards', $debitCards );
+	update_user_meta( $user_id, 'tinkof_auth_subscription', $subscription );
+	update_user_meta( $user_id, 'tinkof_auth_cobrand', $cobrand );
 
 	wp_set_auth_cookie( $user_id );
 
