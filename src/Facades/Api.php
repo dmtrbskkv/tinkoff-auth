@@ -4,11 +4,9 @@ namespace TinkoffAuth\Facades;
 
 use TinkoffAuth\Config\Api as ApiConfig;
 use TinkoffAuth\Config\Auth;
-use TinkoffAuth\Exceptions\UnknownConfig;
 use TinkoffAuth\Helpers\ApiFormatter;
 use TinkoffAuth\Helpers\ApiHelper;
 use TinkoffAuth\Services\Http\Request;
-use TinkoffAuth\Services\Http\Response;
 use TinkoffAuth\Services\State\State;
 
 /**
@@ -31,7 +29,6 @@ class Api extends BaseFacade
      * @param bool $validateState Проверить ли state
      *
      * @return string|null
-     * @throws UnknownConfig
      */
     public function getAccessToken(bool $validateState = true): ?string
     {
@@ -85,7 +82,6 @@ class Api extends BaseFacade
      * @param bool $validateState Нужно ли проверять State
      *
      * @return array
-     * @throws UnknownConfig
      */
     public function token(bool $validateState = true): array
     {

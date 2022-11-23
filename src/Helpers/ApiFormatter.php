@@ -4,7 +4,6 @@ namespace TinkoffAuth\Helpers;
 
 use TinkoffAuth\Config\Api;
 use TinkoffAuth\Config\Auth;
-use TinkoffAuth\Exceptions\UnknownConfig;
 use TinkoffAuth\Services\Http\Response;
 
 class ApiFormatter
@@ -34,7 +33,6 @@ class ApiFormatter
      * @param Response $response
      *
      * @return array
-     * @throws UnknownConfig
      */
     public static function formatTokenParams(Response $response): array
     {
