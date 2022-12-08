@@ -68,7 +68,7 @@ function tinkoff_auth_callback( WP_REST_Request $request ) {
 	} else {
 		$user_id = null;
 		if ( function_exists( 'wc_create_new_customer' ) ) {
-			$user_id = wc_create_new_customer( $username, $password, $email );
+			$user_id = wc_create_new_customer( $email, $username, $password );
 		}
 
 		if ( is_null( $user_id ) ) {
@@ -76,7 +76,8 @@ function tinkoff_auth_callback( WP_REST_Request $request ) {
 		}
 
 		if ( ! $user_id || is_wp_error( $user_id ) ) {
-			return tinkoff_auth_helper_build_response( false, 'Ошибка при создании пользователя' );
+			$message = $user_id->get_error_message()  ?? 'Ошибка при создании пользователя';
+			return tinkoff_auth_helper_build_response( false, $message );
 		}
 	}
 
