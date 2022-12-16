@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Tinkoff Авторизация
+Plugin Name: Тинькофф ID
 Plugin URI: https://github.com/dmtrbskkv/
 Description: Плагин авторизации для WordPress
 Version: 0.1
