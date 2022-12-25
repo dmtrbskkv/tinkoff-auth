@@ -1,10 +1,12 @@
-=== Тинькофф ID ===
+=== Tinkoff ID ===
 Stable tag:        0.2
 Contributors:      dmtrbskkv
 Tested up to:      6.1
 WC Tested up to:   7.2
 Requires PHP:      7.4
 Tags:              tinkoff, тинькофф, auth, авторизация, tinkoff id, social auth, dmtrbskkv, moodmachine
+License:           GPLv2 or later
+License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
 Авторизация через Тинькофф ID для вашего WordPress сайта!
 

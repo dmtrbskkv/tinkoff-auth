@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Тинькофф ID
+Plugin Name: Tinkoff ID
 Plugin URI: https://github.com/dmtrbskkv/
 Description: Плагин авторизации через Тинькофф ID
 Version: 0.2
