@@ -5,6 +5,7 @@ use TinkoffAuth\View\WordPress\SelectButton;
 use TinkoffAuth\View\WordPress\SettingInput;
 
 function tinkoff_auth_credentials_settings_init() {
+	// Register Settings
 	register_setting( 'tinkoff_auth', 'tinkoff_auth_client_id', [ 'type' => 'string' ] );
 	register_setting( 'tinkoff_auth', 'tinkoff_auth_client_secret', [ 'type' => 'string' ] );
 
@@ -22,8 +23,13 @@ function tinkoff_auth_credentials_settings_init() {
 
 	register_setting( 'tinkoff_auth', 'tinkoff_auth_button_size', [ 'type' => 'string' ] );
 
+	register_setting( 'tinkoff_auth', 'tinkoff_auth_button_color', [ 'type' => 'string' ] );
+
+	register_setting( 'tinkoff_auth', 'tinkoff_auth_button_lang', [ 'type' => 'string' ] );
+
 	register_setting( 'tinkoff_auth', 'tinkoff_auth_compatibility_iiko', [ 'type' => 'boolean' ] );
 
+	// Create Sections
 	add_settings_section(
 		'tinkoff_auth_section_credentials',
 		'Данные для авторизации в API Тинькофф ID',
@@ -45,6 +51,7 @@ function tinkoff_auth_credentials_settings_init() {
 		'tinkoff-auth-settings-page'
 	);
 
+	// Crate fields
 	add_settings_field(
 		'tinkoff_auth_client_id',
 		'client_id',
@@ -80,6 +87,20 @@ function tinkoff_auth_credentials_settings_init() {
 		'tinkoff_auth_button_size',
 		'Размер кнопки',
 		'tinkoff_auth_button_size_callback',
+		'tinkoff-auth-settings-page',
+		'tinkoff_auth_section_visual',
+	);
+	add_settings_field(
+		'tinkoff_auth_button_color',
+		'Цвет кнопки',
+		'tinkoff_auth_button_color_callback',
+		'tinkoff-auth-settings-page',
+		'tinkoff_auth_section_visual',
+	);
+	add_settings_field(
+		'tinkoff_auth_button_lang',
+		'Язык кнопки',
+		'tinkoff_auth_button_lang_callback',
 		'tinkoff-auth-settings-page',
 		'tinkoff_auth_section_visual',
 	);
@@ -129,6 +150,14 @@ function tinkoff_auth_button_size_callback() {
 	echo ( new SelectButton( 'tinkoff_auth_button_size', SelectButton::SELECT_BUTTON_SIZE_VALUES ) )->render();
 }
 
+function tinkoff_auth_button_color_callback() {
+	echo ( new SelectButton( 'tinkoff_auth_button_color', SelectButton::SELECT_BUTTON_COLORS_VALUES ) )->render();
+}
+
+function tinkoff_auth_button_lang_callback() {
+	echo ( new SelectButton( 'tinkoff_auth_button_lang', SelectButton::SELECT_BUTTON_LANG_VALUES ) )->render();
+}
+
 function tinkoff_auth_compatibility_iiko_callback() {
 	echo ( new CheckboxInput( 'tinkoff_auth_compatibility_iiko' ) )->render();
 }
@@ -143,7 +172,7 @@ function tinkoff_auth_settings_subpage() {
 	add_submenu_page(
 		'options-general.php',
 		'Настройки Tinkoff',
-		'Тинькофф',
+		'Тинькофф ID',
 		'administrator',
 		'tinkoff-auth-settings-page',
 		'tinkoff_auth_show_settings_page',

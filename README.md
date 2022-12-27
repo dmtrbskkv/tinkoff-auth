@@ -62,13 +62,14 @@ $linkWithScope = $tinkoff->getAuthURL('https://myintegration.ru/auth/complete', 
 
 ### Отображение кнопки
 Чтобы отобразить кнопку, можно вызвать класс `AuthButton` указав в нем ссылку на страницу авторизации
+
 ```php
 //  Опционально можно указать размер кнопки
-$buttonSize = \TinkoffAuth\View\AuthButton::BUTTON_SIZE_SMALL;
-$buttonSize = \TinkoffAuth\View\AuthButton::BUTTON_SIZE_DEFAULT;
-$buttonSize = \TinkoffAuth\View\AuthButton::BUTTON_SIZE_LARGE;
+$buttonSize = \TinkoffAuth\View\AuthButton\AuthButton::BUTTON_SIZE_SMALL;
+$buttonSize = \TinkoffAuth\View\AuthButton\AuthButton::BUTTON_SIZE_DEFAULT;
+$buttonSize = \TinkoffAuth\View\AuthButton\AuthButton::BUTTON_SIZE_LARGE;
 
-$button = new \TinkoffAuth\View\AuthButton($link, $buttonSize);
+$button = new \TinkoffAuth\View\AuthButton\AuthButton($link, $buttonSize);
 echo $button;
 ```
 

@@ -2,7 +2,7 @@
 
 namespace TinkoffAuth\View\WordPress;
 
-use TinkoffAuth\View\AuthButton;
+use TinkoffAuth\View\AuthButton\AuthButton;
 
 class SelectButton extends WordPressComponent
 {
@@ -22,6 +22,15 @@ class SelectButton extends WordPressComponent
         'Стандартная кнопка' => AuthButton::BUTTON_SIZE_DEFAULT,
         'Большая кнопка'     => AuthButton::BUTTON_SIZE_LARGE,
         'Маленькая кнопка'   => AuthButton::BUTTON_SIZE_SMALL
+    ];
+    const SELECT_BUTTON_COLORS_VALUES = [
+        'Желтая кнопка' => AuthButton::BUTTON_COLOR_YELLOW,
+        'Белая кнопка'  => AuthButton::BUTTON_COLOR_WHITE,
+        'Черная кнопка' => AuthButton::BUTTON_COLOR_BLACK
+    ];
+    const SELECT_BUTTON_LANG_VALUES   = [
+        'Русский'    => AuthButton::BUTTON_LANG_RU,
+        'Английский' => AuthButton::BUTTON_LANG_EN,
     ];
 
     private array $values;

@@ -2,7 +2,7 @@
 
 use TinkoffAuth\Config\Auth;
 use TinkoffAuth\Facades\Tinkoff;
-use TinkoffAuth\View\AuthButton;
+use TinkoffAuth\View\AuthButton\AuthButton;
 
 require_once __DIR__ . '/wordpress/spl.php';
 require_once __DIR__ . '/wordpress/settings.php';
@@ -19,9 +19,11 @@ function tinkoff_auth_show_button_shortcode() {
 	$tinkoff = new Tinkoff();
 	$link    = $tinkoff->getAuthURL( $auth_config->get( Auth::REDIRECT_URI ) );
 
-	$buttonSize = get_option( 'tinkoff_auth_button_size' ) ?? '';
+	$buttonSize  = get_option( 'tinkoff_auth_button_size' ) ?? '';
+	$buttonColor = get_option( 'tinkoff_auth_button_color' ) ?? '';
+	$lang = get_option( 'tinkoff_auth_button_lang' ) ?? '';
 
-	return ( new AuthButton( $link, $buttonSize ) )->render();
+	return ( new AuthButton( $link, $buttonSize, $buttonColor, $lang ) )->render();
 }
 
 $button_hook = get_option( 'tinkoff_auth_button_hook' );

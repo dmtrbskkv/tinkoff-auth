@@ -1,3 +1,48 @@
+.button-tinkoff {
+    transition: .12s;
+    cursor: pointer;
+}
+
+/* Yellow button */
+.button-tinkoff-yellow .button-tinkoff-background {
+    fill: #FFDD2D
+}
+
+.button-tinkoff-yellow:hover .button-tinkoff-background {
+    fill: #FCC521;
+}
+
+.button-tinkoff-yellow:active .button-tinkoff-background {
+    fill: #FAB619;
+}
+
+/* White button */
+.button-tinkoff-white .button-tinkoff-background {
+    fill: #F5F5F6;
+}
+
+.button-tinkoff-white:hover .button-tinkoff-background {
+    fill: #D8D8D8;
+}
+
+.button-tinkoff-white:active .button-tinkoff-background {
+    fill: #CECECF;
+}
+
+/* Black button */
+.button-tinkoff-black .button-tinkoff-background {
+    fill: #000;
+}
+
+.button-tinkoff-black:hover .button-tinkoff-background {
+    fill: #292929;
+}
+
+.button-tinkoff-black:active .button-tinkoff-background {
+    fill: #333333;
+}
+
+/*DEPRECATED:*/
 .button-tinkoff-auth {
     font-family: 'Neue Haas', 'Helvetica', sans-serif;
     text-decoration: none;
