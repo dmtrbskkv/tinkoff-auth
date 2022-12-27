@@ -4,7 +4,7 @@ namespace TinkoffAuth\Services\State\Providers;
 
 abstract class Provider
 {
-    protected string $state;
+    protected static string $state;
 
     public function createState(): bool
     {
@@ -15,7 +15,7 @@ abstract class Provider
 
     public function getStateValue(): string
     {
-        return $this->state;
+        return self::$state;
     }
 
     public function validateState(string $string = null): bool

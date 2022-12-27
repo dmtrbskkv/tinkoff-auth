@@ -20,7 +20,6 @@ class Tinkoff extends BaseFacade
      * @param array $scopeParameters
      *
      * @return string
-     * @throws UnknownConfig
      */
     public function getAuthURL(string $redirectURI = null, array $scopeParameters = []): string
     {

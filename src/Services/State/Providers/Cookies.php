@@ -8,8 +8,15 @@ class Cookies extends Provider
 
     public function createState(): bool
     {
-        $this->state = bin2hex(random_bytes(20));
-        setcookie(self::COOKIE_NAME, $this->state, time() + 60 * 60, '/', "", true);
+        $cookieState = $_COOKIE[self::COOKIE_NAME] ?? null;
+        if ($cookieState) {
+            self::$state = $cookieState;
+
+            return true;
+        }
+
+        self::$state = bin2hex(random_bytes(20));
+        setcookie(self::COOKIE_NAME, self::$state, null, '/', "", true);
 
         return true;
     }
