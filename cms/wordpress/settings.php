@@ -1,7 +1,7 @@
 <?php
 
 use TinkoffAuth\View\WordPress\CheckboxInput;
-use TinkoffAuth\View\WordPress\SelectButton;
+use TinkoffAuth\View\WordPress\OptionSelect;
 use TinkoffAuth\View\WordPress\SettingInput;
 
 function tinkoff_auth_credentials_settings_init() {
@@ -136,26 +136,26 @@ function tinkoff_auth_client_secret_callback( $args ) {
 }
 
 function tinkoff_auth_button_hook_callback() {
-	echo ( new SelectButton( 'tinkoff_auth_button_hook', SelectButton::SELECT_HOOK_VALUES ) )->render();
+	echo ( new OptionSelect( 'tinkoff_auth_button_hook', OptionSelect::SELECT_HOOK_VALUES ) )->render();
 }
 
 function tinkoff_auth_button_hook_checkout_callback() {
-	echo ( new SelectButton(
+	echo ( new OptionSelect(
 		'tinkoff_auth_button_hook_checkout',
-		SelectButton::SELECT_HOOK_CHECKOUT_VALUES
+		OptionSelect::SELECT_HOOK_CHECKOUT_VALUES
 	) )->render();
 }
 
 function tinkoff_auth_button_size_callback() {
-	echo ( new SelectButton( 'tinkoff_auth_button_size', SelectButton::SELECT_BUTTON_SIZE_VALUES ) )->render();
+	echo ( new OptionSelect( 'tinkoff_auth_button_size', OptionSelect::sizes() ) )->render();
 }
 
 function tinkoff_auth_button_color_callback() {
-	echo ( new SelectButton( 'tinkoff_auth_button_color', SelectButton::SELECT_BUTTON_COLORS_VALUES ) )->render();
+	echo ( new OptionSelect( 'tinkoff_auth_button_color', OptionSelect::colors() ) )->render();
 }
 
 function tinkoff_auth_button_lang_callback() {
-	echo ( new SelectButton( 'tinkoff_auth_button_lang', SelectButton::SELECT_BUTTON_LANG_VALUES ) )->render();
+	echo ( new OptionSelect( 'tinkoff_auth_button_lang', OptionSelect::languages() ) )->render();
 }
 
 function tinkoff_auth_compatibility_iiko_callback() {

@@ -3,8 +3,9 @@
 namespace TinkoffAuth\View\WordPress;
 
 use TinkoffAuth\View\AuthButton\AuthButton;
+use TinkoffAuth\View\Common\OptionSelect as OptionSelectAbstract;
 
-class SelectButton extends WordPressComponent
+class OptionSelect extends WordPressComponent
 {
     const SELECT_HOOK_VALUES          = [
         'Самостоятельно расположить' => '',
@@ -17,20 +18,6 @@ class SelectButton extends WordPressComponent
         'Выше деталей заказа'        => 'woocommerce_checkout_billing',
         'Внутри деталей заказа'      => 'woocommerce_checkout_shipping',
         'После деталей заказа'       => 'woocommerce_checkout_after_customer_details',
-    ];
-    const SELECT_BUTTON_SIZE_VALUES   = [
-        'Стандартная кнопка' => AuthButton::BUTTON_SIZE_DEFAULT,
-        'Большая кнопка'     => AuthButton::BUTTON_SIZE_LARGE,
-        'Маленькая кнопка'   => AuthButton::BUTTON_SIZE_SMALL
-    ];
-    const SELECT_BUTTON_COLORS_VALUES = [
-        'Желтая кнопка' => AuthButton::BUTTON_COLOR_YELLOW,
-        'Белая кнопка'  => AuthButton::BUTTON_COLOR_WHITE,
-        'Черная кнопка' => AuthButton::BUTTON_COLOR_BLACK
-    ];
-    const SELECT_BUTTON_LANG_VALUES   = [
-        'Русский'    => AuthButton::BUTTON_LANG_RU,
-        'Английский' => AuthButton::BUTTON_LANG_EN,
     ];
 
     private array $values;
@@ -58,4 +45,18 @@ class SelectButton extends WordPressComponent
         return $selectString;
     }
 
+    public static function sizes(): array
+    {
+        return OptionSelectAbstract::SELECT_BUTTON_SIZE_VALUES;
+    }
+
+    public static function colors(): array
+    {
+        return OptionSelectAbstract::SELECT_BUTTON_COLORS_VALUES;
+    }
+
+    public static function languages(): array
+    {
+        return OptionSelectAbstract::SELECT_BUTTON_LANG_VALUES;
+    }
 }

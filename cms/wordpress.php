@@ -4,7 +4,7 @@ use TinkoffAuth\Config\Auth;
 use TinkoffAuth\Facades\Tinkoff;
 use TinkoffAuth\View\AuthButton\AuthButton;
 
-require_once __DIR__ . '/wordpress/spl.php';
+require_once __DIR__ . '/spl.php';
 require_once __DIR__ . '/wordpress/settings.php';
 
 $authConfig = Auth::getInstance();
