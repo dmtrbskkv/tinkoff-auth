@@ -131,8 +131,6 @@ use \TinkoffAuth\Config\State;
 use \TinkoffAuth\Services\State\Providers\Session;
 use \TinkoffAuth\Services\State\Providers\Cookies;
 
-use \TinkoffAuth\Facades\Api();
-
 use \TinkoffAuth\Config\Api as ApiConfig;
 
 // Создаем объект для работы с API
