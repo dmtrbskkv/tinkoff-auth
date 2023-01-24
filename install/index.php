@@ -3,9 +3,9 @@
 IncludeModuleLangFile(__FILE__);
 
 
-class tinkoffauth extends CModule
+class tinkoffid extends CModule
 {
-    var $MODULE_ID = "tinkoffauth";
+    var $MODULE_ID = "tinkoffid";
     var $MODULE_VERSION;
     var $MODULE_VERSION_DATE;
     var $MODULE_NAME;
@@ -21,30 +21,42 @@ class tinkoffauth extends CModule
         $this->MODULE_VERSION      = $arModuleVersion["VERSION"];
         $this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
 
-        $this->MODULE_NAME        = 'Tinkoff Auth';
+        $this->MODULE_NAME        = 'Tinkoff ID';
         $this->MODULE_DESCRIPTION = 'Авторизация через Тинькофф ID';
+
+        $this->PARTNER_NAME = "Тинькофф";
+        $this->PARTNER_URI = "https://www.tinkoff.ru/";
     }
 
     function DoInstall()
     {
+        //TODO: сделать копирование компонента
         $this->InstallFiles();
         $this->InstallDB(false);
     }
 
     function InstallDB()
     {
-        RegisterModule("tinkoffauth");
+        RegisterModule($this->MODULE_ID);
 
         return true;
     }
 
     function InstallFiles()
     {
+        if($_ENV["COMPUTERNAME"]!='BX')
+        {
+            CopyDirFiles($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/components", $_SERVER["DOCUMENT_ROOT"]."/bitrix/components", true, true);
+        }
         return true;
     }
 
     function InstallEvents()
     {
+        if($_ENV["COMPUTERNAME"]!='BX')
+        {
+            DeleteDirFilesEx("/bitrix/components/tinkoff");
+        }
         return true;
     }
 
@@ -57,7 +69,7 @@ class tinkoffauth extends CModule
 
     function UnInstallDB($arParams = array())
     {
-        UnRegisterModule("tinkoffauth");
+        UnRegisterModule($this->MODULE_ID);
 
         return true;
     }

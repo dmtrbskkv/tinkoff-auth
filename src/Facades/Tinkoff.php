@@ -49,7 +49,6 @@ class Tinkoff extends BaseFacade
      * Авторизация пользователя и возвращение его данных по возможности
      *
      * @return FunctionMediator Промежуточный объект, для получения информации о статусе авторизации
-     * @throws UnknownConfig
      */
     public function auth($replacementForURL = []): FunctionMediator
     {

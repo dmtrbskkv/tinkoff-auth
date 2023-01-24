@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__.'/cms/spl.php';
 
 use TinkoffAuth\CMS\Bitrix\Modules\SettingsTabs\Builders\FieldBuilder;
 use TinkoffAuth\CMS\Bitrix\Modules\SettingsTabs\Builders\SettingsTabsBuilder;
@@ -7,13 +6,11 @@ use TinkoffAuth\CMS\Bitrix\Modules\SettingsTabs\Builders\TabBuilder;
 use TinkoffAuth\CMS\Bitrix\Modules\SettingsTabs\ProcessResponse;
 use TinkoffAuth\View\Bitrix\OptionSelect;
 
-define('TINKOFF_AUTH_FIELD_CLIENT_ID', 'tinkoff_auth_client_id', false);
-define('TINKOFF_AUTH_FIELD_CLIENT_SECRET', 'tinkoff_auth_client_secret', false);
-define('TINKOFF_AUTH_FIELD_BUTTON_SIZE', 'tinkoff_auth_button_size', false);
-define('TINKOFF_AUTH_FIELD_BUTTON_COLOR', 'tinkoff_auth_button_color', false);
-define('TINKOFF_AUTH_FIELD_BUTTON_LANG', 'tinkoff_auth_button_lang', false);
+if(!CModule::IncludeModule("tinkoffid")){
+    return;
+}
 
-$moduleID = 'tinkoffauth';
+$moduleID = 'tinkoffid';
 $right = $APPLICATION->GetGroupRight("subscribe");
 if ($right == "D"){
     $APPLICATION->AuthForm(GetMessage("ACCESS_DENIED"));
