@@ -30,7 +30,6 @@ class tinkoffid extends CModule
 
     function DoInstall()
     {
-        //TODO: сделать копирование компонента
         $this->InstallFiles();
         $this->InstallDB(false);
     }
