@@ -11,6 +11,9 @@
 <?php $APPLICATION->IncludeComponent("tinkoff:id.button","",);?>
 ```
 
+### Redirect URI:
+В заявке необходимо указать redirect_uri: httpы://ваш_домен/bitrix/services/main/ajax.php?action=tinkoffid.authflow.sign
+
 ## WordPress
 
 ### Настройка плагина
