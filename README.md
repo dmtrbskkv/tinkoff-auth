@@ -12,7 +12,10 @@
 ```
 
 ### Redirect URI:
-В заявке необходимо указать redirect_uri: httpы://ваш_домен/bitrix/services/main/ajax.php?action=tinkoffid.authflow.sign
+В заявке необходимо указать redirect_uri: 
+```
+https://ваш_домен/bitrix/services/main/ajax.php?action=tinkoffid.authflow.sign
+```
 
 ## WordPress
 
