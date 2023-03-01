@@ -20,7 +20,7 @@ class OptionSelect extends WordPressComponent
         'После деталей заказа'       => 'woocommerce_checkout_after_customer_details',
     ];
 
-    private array $values;
+    private $values;
 
     public function __construct($optionName, $values = [])
     {
@@ -28,7 +28,10 @@ class OptionSelect extends WordPressComponent
         $this->values = $values;
     }
 
-    public function render(): string
+    /**
+     * @return string
+     */
+    public function render()
     {
         if ( ! function_exists('get_option')) {
             return '';
@@ -45,17 +48,26 @@ class OptionSelect extends WordPressComponent
         return $selectString;
     }
 
-    public static function sizes(): array
+    /**
+     * @return array
+     */
+    public static function sizes()
     {
         return OptionSelectAbstract::SELECT_BUTTON_SIZE_VALUES;
     }
 
-    public static function colors(): array
+    /**
+     * @return array
+     */
+    public static function colors()
     {
         return OptionSelectAbstract::SELECT_BUTTON_COLORS_VALUES;
     }
 
-    public static function languages(): array
+    /**
+     * @return array
+     */
+    public static function languages()
     {
         return OptionSelectAbstract::SELECT_BUTTON_LANG_VALUES;
     }

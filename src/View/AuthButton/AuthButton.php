@@ -34,12 +34,12 @@ class AuthButton extends Component
         self::BUTTON_LANG_RU,
     ];
 
-    private static bool $styleInjected = false;
+    private static $styleInjected = false;
 
-    private string $link;
-    private ?string $buttonSize = null;
-    private ?string $buttonColor = null;
-    private ?string $lang = null;
+    private $link;
+    private $buttonSize = null;
+    private $buttonColor = null;
+    private $lang = null;
 
     public function __construct($link, $buttonSize = null, $buttonColor = null, $lang = null)
     {
@@ -55,11 +55,14 @@ class AuthButton extends Component
         }
     }
 
-    public function render(): string
+    /**
+     * @return string
+     */
+    public function render()
     {
-        $color = $this->buttonColor ?? self::BUTTON_COLOR_YELLOW;
-        $size  = $this->buttonSize ?? self::BUTTON_SIZE_DEFAULT;
-        $lang  = $this->lang ?? self::BUTTON_LANG_RU;
+        $color = isset($this->buttonColor) && $this->buttonColor ? $this->buttonColor : self::BUTTON_COLOR_YELLOW;
+        $size  = isset($this->buttonSize) && $this->buttonSize ? $this->buttonSize : self::BUTTON_SIZE_DEFAULT;
+        $lang  = isset($this->lang) && $this->lang ? $this->lang : self::BUTTON_LANG_RU;
 
         $string   = $this->styles();
         $filename = $lang . '-' . $color . '-' . $size . '.svg';

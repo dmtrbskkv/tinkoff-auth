@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-if(!CModule::IncludeModule("tinkoffid")){
+if ( ! CModule::IncludeModule("tinkoffid")) {
     return;
 }
 

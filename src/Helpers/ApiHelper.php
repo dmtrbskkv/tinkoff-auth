@@ -15,7 +15,7 @@ class ApiHelper
      *
      * @return bool
      */
-    public static function validateScopes(array $userScopes = [], array $scopeForCompare = []): bool
+    public static function validateScopes(array $userScopes = [], array $scopeForCompare = [])
     {
         if ( ! $userScopes || ! $scopeForCompare) {
             return false;

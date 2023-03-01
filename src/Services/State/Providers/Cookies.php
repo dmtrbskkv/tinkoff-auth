@@ -6,24 +6,36 @@ class Cookies extends Provider
 {
     const COOKIE_NAME = 'tinkoff_auth_state';
 
-    public function createState(): bool
+    /**
+     * Создание стейта и занесение его в куки
+     *
+     * @return bool
+     */
+    public function createState()
     {
-        $cookieState = $_COOKIE[self::COOKIE_NAME] ?? null;
+        $cookieState = $this->getCookieState();
         if ($cookieState) {
             self::$state = $cookieState;
 
             return true;
         }
 
-        self::$state = bin2hex(random_bytes(20));
+        self::$state = $this->generateRandomString();
         setcookie(self::COOKIE_NAME, self::$state, null, '/', "", true);
 
         return true;
     }
 
-    public function validateState(string $string = null): bool
+    /**
+     * Проверка стейта по данным в куках и переданному стейту
+     *
+     * @param string|null $string
+     *
+     * @return bool
+     */
+    public function validateState($string = null)
     {
-        $cookieState = $_COOKIE[self::COOKIE_NAME] ?? null;
+        $cookieState = $this->getCookieState();
         if (is_null($cookieState)) {
             return false;
         }
@@ -31,4 +43,8 @@ class Cookies extends Provider
         return $cookieState === $string;
     }
 
+    private function getCookieState()
+    {
+        return isset($_COOKIE[self::COOKIE_NAME]) && $_COOKIE[self::COOKIE_NAME] ? $_COOKIE[self::COOKIE_NAME] : null;
+    }
 }

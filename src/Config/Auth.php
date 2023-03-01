@@ -9,16 +9,22 @@ class Auth extends Config
     const REDIRECT_URI  = 'redirect_uri';
     const ACCESS_TOKEN  = 'access_token';
 
-    protected array $availableIndexes = [
+    protected $availableIndexes = [
         self::CLIENT_ID,
         self::CLIENT_SECRET,
         self::REDIRECT_URI,
         self::ACCESS_TOKEN,
     ];
 
-    protected static ?Auth $instance = null;
+    /**
+     * @var Auth|null Текущий объект синглтона
+     */
+    protected static $instance = null;
 
-    public static function getInstance(): Auth
+    /**
+     * @return Auth
+     */
+    public static function getInstance()
     {
         if (self::$instance) {
             return self::$instance;

@@ -6,7 +6,10 @@ use TinkoffAuth\View\Component;
 
 abstract class BitrixComponent extends Component
 {
-    public function render(): string
+    /**
+     * @return string
+     */
+    public function render()
     {
         return '';
     }

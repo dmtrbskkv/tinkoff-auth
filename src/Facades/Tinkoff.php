@@ -21,7 +21,7 @@ class Tinkoff extends BaseFacade
      *
      * @return string
      */
-    public function getAuthURL(string $redirectURI = null, array $scopeParameters = []): string
+    public function getAuthURL($redirectURI = null, $scopeParameters = [])
     {
         $authConfig = Auth::getInstance();
         if ( ! $redirectURI) {
@@ -50,7 +50,7 @@ class Tinkoff extends BaseFacade
      *
      * @return FunctionMediator Промежуточный объект, для получения информации о статусе авторизации
      */
-    public function auth($replacementForURL = []): FunctionMediator
+    public function auth()
     {
         $mediator = new FunctionMediator();
         $mediator->setStatus(false);
@@ -73,7 +73,7 @@ class Tinkoff extends BaseFacade
             return $mediator;
         }
 
-        $userinfo = $api->userinfoFull($accessToken, $replacementForURL);
+        $userinfo = $api->userinfoFull($accessToken);
         if (count($userinfo[ApiConfig::SCOPES_USERINFO]) === 0) {
             $mediator->setMessage('Ошибка при получении пользователя');
 

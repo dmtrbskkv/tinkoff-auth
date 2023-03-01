@@ -4,11 +4,23 @@ namespace TinkoffAuth\Services\Http;
 
 class Response
 {
-    private string $headersRaw;
-    private string $bodyRaw;
+    /**
+     * @var string
+     */
+    private $headersRaw = '';
+    /**
+     * @var string
+     */
+    private $bodyRaw = '';
 
-    private array $bodyJSON;
-    private array $headers;
+    /**
+     * @var array
+     */
+    private $bodyJSON = [];
+    /**
+     * @var array
+     */
+    private $headers = [];
 
     public function setBody($body)
     {
@@ -27,27 +39,44 @@ class Response
         }
     }
 
-    public function json(): array
+    /**
+     * @return array
+     */
+    public function json()
     {
-        return $this->bodyJSON ?? [];
+        return $this->bodyJSON;
     }
 
-    public function body(): string
+    /**
+     * @return string
+     */
+    public function body()
     {
-        return $this->bodyRaw ?? '';
+        return $this->bodyRaw;
     }
 
-    public function headers(): array
+    /**
+     * @return array
+     */
+    public function headers()
     {
-        return $this->headers ?? [];
+        return $this->headers;
     }
 
-    public function headersRaw(): string
+    /**
+     * @return string
+     */
+    public function headersRaw()
     {
-        return $this->headersRaw ?? '';
+        return $this->headersRaw;
     }
 
-    private function parseHeaders($headers): array
+    /**
+     * @param $headers
+     *
+     * @return array
+     */
+    private function parseHeaders($headers)
     {
         if ( ! is_string($headers)) {
             return [];
@@ -71,7 +100,12 @@ class Response
         return $headersArray;
     }
 
-    private function jsonDecodeBody($body): array
+    /**
+     * @param $body
+     *
+     * @return array
+     */
+    private function jsonDecodeBody($body)
     {
         $canBeDecoded = json_decode($body);
         if ( ! $canBeDecoded) {

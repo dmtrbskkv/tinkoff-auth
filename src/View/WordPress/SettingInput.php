@@ -5,7 +5,10 @@ namespace TinkoffAuth\View\WordPress;
 class SettingInput extends WordPressComponent
 {
 
-    public function render(): string
+    /**
+     * @return string
+     */
+    public function render()
     {
         if ( ! function_exists('get_option')) {
             return '';

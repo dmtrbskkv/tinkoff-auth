@@ -17,7 +17,7 @@ class ProcessResponse
             } else {
                 // Сохранение значений полей
                 foreach ($fields as $fieldID) {
-                    $value = $_REQUEST[$fieldID] ?? '';
+                    $value = isset($_REQUEST[$fieldID]) && $_REQUEST[$fieldID] ? $_REQUEST[$fieldID] : '';
                     \COption::SetOptionString($moduleID, $fieldID, $value);
                 }
             }

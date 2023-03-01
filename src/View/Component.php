@@ -4,12 +4,18 @@ namespace TinkoffAuth\View;
 
 abstract class Component
 {
-    public function renderInline():void
+    /**
+     * @return void
+     */
+    public function renderInline()
     {
         echo '';
     }
 
-    public function render(): string
+    /**
+     * @return string
+     */
+    public function render()
     {
         return '<div> I\'m component</div>';
     }

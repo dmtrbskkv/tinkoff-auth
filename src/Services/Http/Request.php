@@ -5,8 +5,14 @@ namespace TinkoffAuth\Services\Http;
 class Request
 {
     private $curl;
-    private string $domain = '';
-    private array $headers = [];
+    /**
+     * @var string
+     */
+    private $domain = '';
+    /**
+     * @var array
+     */
+    private $headers = [];
 
     public function __construct($domain = '')
     {
@@ -17,7 +23,7 @@ class Request
         curl_setopt($this->curl, CURLOPT_HEADER, true);
         curl_setopt($this->curl, CURLOPT_TIMEOUT, 10);
         curl_setopt($this->curl, CURLOPT_MAXREDIRS, 10);
-        $this->domain = $domain ?? '';
+        $this->domain = isset($domain) && $domain ? $domain : '';
 
         $this->headers[] = 'cache-control: no-cache';
     }
@@ -37,17 +43,36 @@ class Request
         $this->headers[] = $value;
     }
 
-    public function get($url, array $query): Response
+    /**
+     * @param $url
+     * @param array $query
+     *
+     * @return Response
+     */
+    public function get($url, $query)
     {
         return $this->request($url . '?' . http_build_query($query), 'get');
     }
 
-    public function post($url, $body): Response
+    /**
+     * @param $url
+     * @param $body
+     *
+     * @return Response
+     */
+    public function post($url, $body)
     {
         return $this->request($url, 'post', $body);
     }
 
-    public function request($url, $method = 'GET', $body = null): Response
+    /**
+     * @param $url
+     * @param $method
+     * @param $body
+     *
+     * @return Response
+     */
+    public function request($url, $method = 'GET', $body = null)
     {
         if (strtolower($method) === 'post') {
             curl_setopt($this->curl, CURLOPT_POST, true);

@@ -25,7 +25,7 @@ class tinkoffid extends CModule
         $this->MODULE_DESCRIPTION = 'Авторизация через Тинькофф ID';
 
         $this->PARTNER_NAME = "Тинькофф";
-        $this->PARTNER_URI = "https://www.tinkoff.ru/";
+        $this->PARTNER_URI  = "https://www.tinkoff.ru/";
     }
 
     function DoInstall()
@@ -43,19 +43,24 @@ class tinkoffid extends CModule
 
     function InstallFiles()
     {
-        if($_ENV["COMPUTERNAME"]!='BX')
-        {
-            CopyDirFiles($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/components", $_SERVER["DOCUMENT_ROOT"]."/bitrix/components", true, true);
+        if ($_ENV["COMPUTERNAME"] != 'BX') {
+            CopyDirFiles(
+                $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/" . $this->MODULE_ID . "/install/components",
+                $_SERVER["DOCUMENT_ROOT"] . "/bitrix/components",
+                true,
+                true
+            );
         }
+
         return true;
     }
 
     function InstallEvents()
     {
-        if($_ENV["COMPUTERNAME"]!='BX')
-        {
+        if ($_ENV["COMPUTERNAME"] != 'BX') {
             DeleteDirFilesEx("/bitrix/components/tinkoff");
         }
+
         return true;
     }
 

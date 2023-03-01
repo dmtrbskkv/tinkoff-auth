@@ -19,7 +19,7 @@ class Api extends Config
     const SCOPES_SUBSCRIPTION         = 'scopes_subscription';
     const SCOPES_COBRAND_STATUS       = 'scopes_cobrand_status';
 
-    protected array $availableIndexes = [
+    protected $availableIndexes = [
         self::USER_SCOPES,
 
         self::SCOPES_USERINFO,
@@ -36,9 +36,15 @@ class Api extends Config
         self::SCOPES_COBRAND_STATUS,
     ];
 
-    protected static ?Api $instance = null;
+    /**
+     * @var Api|null Текущий объект синглтона
+     */
+    protected static $instance = null;
 
-    public static function getInstance(): Api
+    /**
+     * @return Api
+     */
+    public static function getInstance()
     {
         if (self::$instance) {
             return self::$instance;
@@ -49,7 +55,10 @@ class Api extends Config
         return self::getInstance();
     }
 
-    public function getScopes(): array
+    /**
+     * @return array[]
+     */
+    public function getScopes()
     {
         return [
             self::SCOPES_USERINFO             => [

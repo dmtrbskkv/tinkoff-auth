@@ -57,14 +57,14 @@ function tinkoff_auth_credentials_settings_init() {
 		'client_id',
 		'tinkoff_auth_client_id_callback',
 		'tinkoff-auth-settings-page',
-		'tinkoff_auth_section_credentials',
+		'tinkoff_auth_section_credentials'
 	);
 	add_settings_field(
 		'tinkoff_auth_client_secret',
 		'client_secret',
 		'tinkoff_auth_client_secret_callback',
 		'tinkoff-auth-settings-page',
-		'tinkoff_auth_section_credentials',
+		'tinkoff_auth_section_credentials'
 	);
 
 	add_settings_field(
@@ -72,7 +72,7 @@ function tinkoff_auth_credentials_settings_init() {
 		'Расположение на странице авторизации',
 		'tinkoff_auth_button_hook_callback',
 		'tinkoff-auth-settings-page',
-		'tinkoff_auth_section_visual',
+		'tinkoff_auth_section_visual'
 	);
 
 	add_settings_field(
@@ -80,7 +80,7 @@ function tinkoff_auth_credentials_settings_init() {
 		'Расположение на странице оформления заказа',
 		'tinkoff_auth_button_hook_checkout_callback',
 		'tinkoff-auth-settings-page',
-		'tinkoff_auth_section_visual',
+		'tinkoff_auth_section_visual'
 	);
 
 	add_settings_field(
@@ -88,21 +88,21 @@ function tinkoff_auth_credentials_settings_init() {
 		'Размер кнопки',
 		'tinkoff_auth_button_size_callback',
 		'tinkoff-auth-settings-page',
-		'tinkoff_auth_section_visual',
+		'tinkoff_auth_section_visual'
 	);
 	add_settings_field(
 		'tinkoff_auth_button_color',
 		'Цвет кнопки',
 		'tinkoff_auth_button_color_callback',
 		'tinkoff-auth-settings-page',
-		'tinkoff_auth_section_visual',
+		'tinkoff_auth_section_visual'
 	);
 	add_settings_field(
 		'tinkoff_auth_button_lang',
 		'Язык кнопки',
 		'tinkoff_auth_button_lang_callback',
 		'tinkoff-auth-settings-page',
-		'tinkoff_auth_section_visual',
+		'tinkoff_auth_section_visual'
 	);
 
 	add_settings_field(
@@ -110,7 +110,7 @@ function tinkoff_auth_credentials_settings_init() {
 		'Добавление мета полей iiko',
 		'tinkoff_auth_compatibility_iiko_callback',
 		'tinkoff-auth-settings-page',
-		'tinkoff_auth_section_compatibility',
+		'tinkoff_auth_section_compatibility'
 	);
 }
 

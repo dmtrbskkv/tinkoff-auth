@@ -1,7 +1,8 @@
 <?php
+
 return [
     'controllers' => [
-        'value' => [
+        'value'    => [
             'defaultNamespace' => '\\Bitrix\\TinkoffID\\Controller',
         ],
         'readonly' => true,

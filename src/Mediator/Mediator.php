@@ -4,36 +4,60 @@ namespace TinkoffAuth\Mediator;
 
 abstract class Mediator
 {
-    protected bool $status = false;
-    protected string $message = '';
+    protected $status = false;
+    protected $message = '';
     protected $payload = null;
 
-    public function getStatus(): bool
+    /**
+     * @return bool
+     */
+    public function getStatus()
     {
         return $this->status;
     }
 
-    public function setStatus(bool $status): void
+    /**
+     * @param bool $status
+     *
+     * @return void
+     */
+    public function setStatus($status)
     {
         $this->status = $status;
     }
 
-    public function getMessage(): string
+    /**
+     * @return string
+     */
+    public function getMessage()
     {
         return $this->message;
     }
 
-    public function setMessage(string $message): void
+    /**
+     * @param string $message
+     *
+     * @return void
+     */
+    public function setMessage($message)
     {
         $this->message = $message;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getPayload()
     {
         return $this->payload;
     }
 
-    public function setPayload($payload): void
+    /**
+     * @param $payload
+     *
+     * @return void
+     */
+    public function setPayload($payload)
     {
         $this->payload = $payload;
     }

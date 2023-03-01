@@ -15,7 +15,10 @@ use TinkoffAuth\Facades\Tinkoff;
 class AuthFlow extends Controller
 {
 
-    public function configureActions(): array
+    /**
+     * @return array[]
+     */
+    public function configureActions()
     {
         return [
             'sign' => [
@@ -45,8 +48,9 @@ class AuthFlow extends Controller
         $lastName    = $userinfo['family_name'];
 
         // Формирование почты, имени пользователя и пароля
-        $email    = $userinfo['email'] ?? null;
-        $username = str_replace(['+', ' ', '-'], '', $userinfo['phone_number']) ?? null;
+        $email    = isset($userinfo['email']) && $userinfo['email'] ? $userinfo['email'] : null;
+        $username = str_replace(['+', ' ', '-'], '', $userinfo['phone_number']);
+        $username = $username ?: null;
         $password = md5(time() . rand(0, 100) . rand(0, 200));
 
 
@@ -56,7 +60,7 @@ class AuthFlow extends Controller
 
         $userEntity = new CUser;
         $user       = CUser::GetByLogin($email)->Fetch();
-        $userID     = $user['ID'] ?? null;
+        $userID     = isset($user['ID']) && $user['ID'] ? $user['ID'] : null;
 
         if ( ! $userID) {
             $userID = $userEntity->Add([

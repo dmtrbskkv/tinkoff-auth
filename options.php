@@ -6,13 +6,13 @@ use TinkoffAuth\CMS\Bitrix\Modules\SettingsTabs\Builders\TabBuilder;
 use TinkoffAuth\CMS\Bitrix\Modules\SettingsTabs\ProcessResponse;
 use TinkoffAuth\View\Bitrix\OptionSelect;
 
-if(!CModule::IncludeModule("tinkoffid")){
+if ( ! CModule::IncludeModule("tinkoffid")) {
     return;
 }
 
 $moduleID = 'tinkoffid';
-$right = $APPLICATION->GetGroupRight("subscribe");
-if ($right == "D"){
+$right    = $APPLICATION->GetGroupRight("subscribe");
+if ($right == "D") {
     $APPLICATION->AuthForm(GetMessage("ACCESS_DENIED"));
 }
 
@@ -23,7 +23,9 @@ ProcessResponse::process($moduleID, [
     TINKOFF_AUTH_FIELD_BUTTON_COLOR,
     TINKOFF_AUTH_FIELD_BUTTON_LANG,
 ], [
-    $save, $apply, $RestoreDefaults
+    $save,
+    $apply,
+    $RestoreDefaults
 ]);
 
 $tabMain = new TabBuilder($moduleID);

@@ -4,7 +4,10 @@ namespace TinkoffAuth\View\WordPress;
 
 class CheckboxInput extends WordPressComponent
 {
-    public function render(): string
+    /**
+     * @return string
+     */
+    public function render()
     {
         $checked = get_option($this->optionName) ? 'checked' : '';
 

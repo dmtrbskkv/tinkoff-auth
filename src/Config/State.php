@@ -6,13 +6,19 @@ class State extends Config
 {
     const PROVIDER = 'provider';
 
-    protected array $availableIndexes = [
+    protected $availableIndexes = [
         self::PROVIDER
     ];
 
-    protected static ?State $instance = null;
+    /**
+     * @var State|null Текущий объект синглтона
+     */
+    protected static $instance = null;
 
-    public static function getInstance(): State
+    /**
+     * @return State
+     */
+    public static function getInstance()
     {
         if (self::$instance) {
             return self::$instance;

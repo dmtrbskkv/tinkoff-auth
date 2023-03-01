@@ -8,28 +8,44 @@ use TinkoffAuth\Services\State\Providers\Provider;
 
 class State
 {
-    private Provider $provider;
+    /**
+     * @var Provider|null
+     */
+    private $provider;
 
-    public function __construct(string $provider = null)
+    /**
+     * @param string|null $provider
+     */
+    public function __construct($provider = null)
     {
         $stateConfig = StateConfig::getInstance();
 
         if ( ! is_null($provider) && is_subclass_of($provider, Provider::class)) {
             $this->provider = new $provider();
         } else {
-            $provider       = $stateConfig->get(StateConfig::PROVIDER) ?? Cookies::class;
+            $provider       = $stateConfig->get(StateConfig::PROVIDER)
+                ? $stateConfig->get(StateConfig::PROVIDER)
+                : Cookies::class;
             $this->provider = new $provider;
         }
     }
 
-    public function getState(): string
+    /**
+     * @return string
+     */
+    public function getState()
     {
         $this->provider->createState();
 
         return $this->provider->getStateValue();
     }
 
-    public function validate(string $string): bool
+    /**
+     * @param string $string
+     *
+     * @return bool
+     */
+    public function validate($string)
     {
         return $this->provider->validateState($string);
     }

@@ -4,22 +4,56 @@ namespace TinkoffAuth\Services\State\Providers;
 
 abstract class Provider
 {
-    protected static string $state;
+    /**
+     * @var string Текущий стейт
+     */
+    protected static $state;
 
-    public function createState(): bool
+    /**
+     * Создание стейта и сохранение его
+     *
+     * @return bool
+     */
+    public function createState()
     {
         $this->state = '';
 
         return false;
     }
 
-    public function getStateValue(): string
+    /**
+     * Получение стейта
+     *
+     * @return string
+     */
+    public function getStateValue()
     {
         return self::$state;
     }
 
-    public function validateState(string $string = null): bool
+    /**
+     * Проверка стейта
+     *
+     * @param string|null $string
+     *
+     * @return bool
+     */
+    public function validateState($string = null)
     {
         return false;
+    }
+
+    protected function generateRandomString($length = 20)
+    {
+        return substr(
+            str_shuffle(
+                str_repeat(
+                    $x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                    ceil($length / strlen($x))
+                )
+            ),
+            1,
+            $length
+        );
     }
 }

@@ -30,9 +30,11 @@ class Api extends BaseFacade
      *
      * @return string|null
      */
-    public function getAccessToken(bool $validateState = true): ?string
+    public function getAccessToken($validateState = true)
     {
-        return $this->token($validateState)['access_token'] ?? null;
+        $token = $this->token($validateState);
+
+        return isset($token['access_token']) && $token['access_token'] ? $token['access_token'] : null;
     }
 
     /**
@@ -43,7 +45,7 @@ class Api extends BaseFacade
      *
      * @return array
      */
-    public function getScopes(string $accessToken = null, bool $useConfig = true): array
+    public function getScopes($accessToken = null, $useConfig = true)
     {
         $apiConfig = ApiConfig::getInstance();
 
@@ -69,7 +71,7 @@ class Api extends BaseFacade
      *
      * @return bool
      */
-    public function validateScopes(array $scopeForCompare = [], string $accessToken = null): bool
+    public function validateScopes($scopeForCompare = [], $accessToken = null)
     {
         $userScopes = $this->getScopes($accessToken);
 
@@ -83,12 +85,13 @@ class Api extends BaseFacade
      *
      * @return array
      */
-    public function token(bool $validateState = true): array
+    public function token($validateState = true)
     {
         $authConfig = Auth::getInstance();
 
         $authParams = $this->getAuthParams($validateState);
-        $code       = $authParams['code'] ?? null;
+        $code       = isset($authParams['code']) && $authParams['code'] ? $authParams['code'] : null;
+
         if ( ! $code) {
             return [];
         }
@@ -110,7 +113,7 @@ class Api extends BaseFacade
      *
      * @return array
      */
-    public function userinfo($accessToken = null): array
+    public function userinfo($accessToken = null)
     {
         $authConfig = Auth::getInstance();
 
@@ -127,16 +130,15 @@ class Api extends BaseFacade
      * Получение максимально возможной информации о пользователе
      *
      * @param string|null $accessToken
-     * @param array $replacement
      *
      * @return array
      */
-    public function userinfoFull(string $accessToken = null, array $replacement = []): array
+    public function userinfoFull($accessToken = null)
     {
         $authConfig = Auth::getInstance();
         $apiConfig  = ApiConfig::getInstance();
 
-        $accessToken = $accessToken ?? $authConfig->get(Auth::ACCESS_TOKEN);
+        $accessToken = isset($accessToken) && $accessToken ? $accessToken : $authConfig->get(Auth::ACCESS_TOKEN);
         if ( ! $accessToken) {
             return ApiFormatter::formatUserinfoFull();
         }
@@ -146,19 +148,15 @@ class Api extends BaseFacade
 
         $userinfoFull = [];
         foreach ($routes as $index => $route) {
-            $userHasNeededScopes = $this->validateScopes($neededScopes[$index] ?? []);
+            $scopes = isset($neededScopes[$index]) && $neededScopes[$index] ? $neededScopes[$index] : [];
+
+            $userHasNeededScopes = $this->validateScopes($scopes);
             if ( ! $userHasNeededScopes) {
                 continue;
             }
 
             $request = new Request();
             $request = $this->addBearerCredentials($request, $accessToken);
-
-            try {
-                $route = sprintf($route, ...($replacement[$index] ?? []));
-            } catch (\Exception $e) {
-                continue;
-            }
 
             switch ($index) {
                 case ApiConfig::SCOPES_USERINFO:
@@ -184,7 +182,7 @@ class Api extends BaseFacade
      *
      * @return array
      */
-    public function introspect(string $accessToken = null): array
+    public function introspect($accessToken = null)
     {
         if ( ! $accessToken) {
             $authConfig  = Auth::getInstance();
@@ -207,9 +205,11 @@ class Api extends BaseFacade
      *
      * @return array
      */
-    public function getAuthParams(bool $validateState = true): array
+    public function getAuthParams($validateState = true)
     {
-        $state = $_GET['state'] ?? -1;
+        $state        = isset($_GET['state']) && $_GET['state'] ? $_GET['state'] : -1;
+        $stateSession = isset($_GET['session_state']) && $_GET['session_state'] ? $_GET['session_state'] : -1;
+        $code         = isset($_GET['code']) && $_GET['code'] ? $_GET['code'] : null;
 
         if ($validateState) {
             $stateService = new State();
@@ -219,9 +219,9 @@ class Api extends BaseFacade
         }
 
         return [
-            'state'         => $_GET['state'] ?? -1,
-            'session_state' => $_GET['session_state'] ?? -1,
-            'code'          => $_GET['code'] ?? null
+            'state'         => $state,
+            'session_state' => $stateSession,
+            'code'          => $code
         ];
     }
 
@@ -232,7 +232,7 @@ class Api extends BaseFacade
      *
      * @return Request
      */
-    public function addBaseAuthCredentials(Request $request): Request
+    public function addBaseAuthCredentials($request)
     {
         $authConfig = Auth::getInstance();
 
@@ -252,7 +252,7 @@ class Api extends BaseFacade
      *
      * @return Request
      */
-    public function addBearerCredentials(Request $request, $accessToken = null): Request
+    public function addBearerCredentials($request, $accessToken = null)
     {
         $authConfig = Auth::getInstance();
 
@@ -270,7 +270,7 @@ class Api extends BaseFacade
      *
      * @return Request
      */
-    private function createTinkoffIDRequest(): Request
+    private function createTinkoffIDRequest()
     {
         $request = new Request('https://id.tinkoff.ru/');
 
@@ -284,7 +284,7 @@ class Api extends BaseFacade
      *
      * @return Request
      */
-    private function createTinkoffIDBearerRequest($accessToken = null): Request
+    private function createTinkoffIDBearerRequest($accessToken = null)
     {
         $request = new Request('https://id.tinkoff.ru/');
 

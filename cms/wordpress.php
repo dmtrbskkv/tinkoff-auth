@@ -19,9 +19,9 @@ function tinkoff_auth_show_button_shortcode() {
 	$tinkoff = new Tinkoff();
 	$link    = $tinkoff->getAuthURL( $auth_config->get( Auth::REDIRECT_URI ) );
 
-	$buttonSize  = get_option( 'tinkoff_auth_button_size' ) ?? '';
-	$buttonColor = get_option( 'tinkoff_auth_button_color' ) ?? '';
-	$lang = get_option( 'tinkoff_auth_button_lang' ) ?? '';
+	$buttonSize  = get_option( 'tinkoff_auth_button_size' ) ? get_option( 'tinkoff_auth_button_size' ) : '';
+	$buttonColor = get_option( 'tinkoff_auth_button_color' ) ? get_option( 'tinkoff_auth_button_color' ) : '';
+	$lang        = get_option( 'tinkoff_auth_button_lang' ) ? get_option( 'tinkoff_auth_button_lang' ) : '';
 
 	return ( new AuthButton( $link, $buttonSize, $buttonColor, $lang ) )->render();
 }

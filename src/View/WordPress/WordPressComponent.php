@@ -6,7 +6,10 @@ use TinkoffAuth\View\Component;
 
 abstract class WordPressComponent extends Component
 {
-    protected string $optionName;
+    /**
+     * @var string
+     */
+    protected $optionName;
 
     public function __construct($optionName)
     {
