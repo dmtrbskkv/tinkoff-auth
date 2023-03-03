@@ -12,10 +12,9 @@ define('TINKOFF_AUTH_FIELD_BUTTON_LANG', 'tinkoff_auth_button_lang');
 
 
 $host     = $_SERVER['HTTP_HOST'];
-$protocol = $_SERVER['PROTOCOL'] = isset($_SERVER['HTTPS']) && ! empty($_SERVER['HTTPS']) ? 'https' : 'http';
 $uri      = '/bitrix/services/main/ajax.php?action=tinkoffid.authflow.sign';
 
 $authConfig = Auth::getInstance();
 $authConfig->push(Auth::CLIENT_ID, \COption::GetOptionString('tinkoffid', TINKOFF_AUTH_FIELD_CLIENT_ID));
 $authConfig->push(Auth::CLIENT_SECRET, \COption::GetOptionString('tinkoffid', TINKOFF_AUTH_FIELD_CLIENT_SECRET));
-$authConfig->push(Auth::REDIRECT_URI, $protocol . '://' . $host . $uri);
+$authConfig->push(Auth::REDIRECT_URI, 'https://' . $host . $uri);
