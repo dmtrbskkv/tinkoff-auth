@@ -32,14 +32,13 @@ class AuthFlow extends Controller
 
     public function signAction()
     {
-        $homeResponse = new Redirect('/');
         if ( ! CModule::IncludeModule("tinkoffid")) {
-            return $homeResponse;
+            return $this->redirectHome();
         }
         $tinkoff  = new Tinkoff();
         $mediator = $tinkoff->auth();
         if ( ! $mediator->getStatus()) {
-            return $homeResponse;
+            return $this->redirectHome();
         }
 
         $credentials = $mediator->getPayload();
@@ -55,7 +54,7 @@ class AuthFlow extends Controller
 
 
         if ( ! $email || ! $username) {
-            return $homeResponse;
+            return $this->redirectHome();
         }
 
         $userEntity = new CUser;
@@ -115,6 +114,16 @@ class AuthFlow extends Controller
         $userEntity->Authorize($userID);
 
 
-        return $homeResponse;
+        return $this->redirectHome();
+    }
+
+    private function redirectHome()
+    {
+        if (class_exists(Redirect::class)) {
+            return new Redirect('/');
+        }
+
+        header('Location: /');
+        exit();
     }
 }
