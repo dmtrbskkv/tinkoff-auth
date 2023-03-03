@@ -58,7 +58,7 @@ class tinkoffid extends CModule
     function InstallEvents()
     {
         if ($_ENV["COMPUTERNAME"] != 'BX') {
-            DeleteDirFilesEx("/bitrix/components/tinkoff");
+            DeleteDirFilesEx("/bitrix/components/tinkoff/id.button");
         }
 
         return true;
