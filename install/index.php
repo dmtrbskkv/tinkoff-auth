@@ -31,12 +31,17 @@ class tinkoffid extends CModule
     function DoInstall()
     {
         $this->InstallFiles();
+        $this->InstallEvents();
+
         $this->InstallDB(false);
     }
 
-    function InstallDB()
+    function DoUninstall()
     {
-        RegisterModule($this->MODULE_ID);
+        $this->UnInstallFiles();
+        $this->UnInstallEvents();
+
+        $this->UnInstallDB(false);
 
         return true;
     }
@@ -57,17 +62,25 @@ class tinkoffid extends CModule
 
     function InstallEvents()
     {
-        if ($_ENV["COMPUTERNAME"] != 'BX') {
-            DeleteDirFilesEx("/bitrix/components/tinkoff/id.button");
-        }
+        return true;
+    }
+
+    function InstallDB()
+    {
+        RegisterModule($this->MODULE_ID);
 
         return true;
     }
 
-    function DoUninstall()
+    function UnInstallFiles($arParams = array())
     {
-        $this->UnInstallDB(false);
+        \Bitrix\Main\IO\Directory::deleteDirectory($_SERVER['DOCUMENT_ROOT'] . "/bitrix/components/tinkoff/id.button");
 
+        return true;
+    }
+
+    function UnInstallEvents()
+    {
         return true;
     }
 
@@ -75,16 +88,6 @@ class tinkoffid extends CModule
     {
         UnRegisterModule($this->MODULE_ID);
 
-        return true;
-    }
-
-    function UnInstallFiles($arParams = array())
-    {
-        return true;
-    }
-
-    function UnInstallEvents()
-    {
         return true;
     }
 }
