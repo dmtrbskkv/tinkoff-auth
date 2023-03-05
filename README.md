@@ -1,6 +1,8 @@
 ## Bitrix
 
-Название папки модуля: `tinkoffid`
+Название папки модуля: `tinkoffid` 
+
+Redirect URI в заявке: https://ваш_домен/bitrix/services/main/ajax.php?action=tinkoffid.authflow.sign 
 
 ### Настройка плагина
 
@@ -15,6 +17,8 @@
 ```
 
 ## WordPress
+
+Redirect URI в заявке: https://ваш_домен/wp-json/tinkoff_auth/v1/callback
 
 ### Настройка плагина
 
