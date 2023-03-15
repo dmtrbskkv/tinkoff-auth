@@ -41,6 +41,14 @@ class State
     }
 
     /**
+     * @return void
+     */
+    public function createState()
+    {
+        $this->provider->createState();
+    }
+
+    /**
      * @param string $string
      *
      * @return bool

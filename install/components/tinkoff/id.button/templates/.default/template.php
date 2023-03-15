@@ -10,6 +10,7 @@ $size  = \COption::GetOptionString('tinkoffid', TINKOFF_AUTH_FIELD_BUTTON_SIZE, 
 $color = \COption::GetOptionString('tinkoffid', TINKOFF_AUTH_FIELD_BUTTON_COLOR, null);
 $lang  = \COption::GetOptionString('tinkoffid', TINKOFF_AUTH_FIELD_BUTTON_LANG, null);
 
+
 $tinkoff = new Tinkoff();
 $link    = $tinkoff->getAuthURL($authConfig->get(Auth::REDIRECT_URI));
 
