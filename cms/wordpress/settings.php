@@ -1,8 +1,8 @@
 <?php
 
-use TinkoffAuth\View\WordPress\CheckboxInput;
-use TinkoffAuth\View\WordPress\OptionSelect;
-use TinkoffAuth\View\WordPress\SettingInput;
+use TinkoffAuth\View\WordPress\Settings\CheckboxInput;
+use TinkoffAuth\View\WordPress\Settings\OptionSelect;
+use TinkoffAuth\View\WordPress\Settings\SettingInput;
 
 function tinkoff_auth_credentials_settings_init() {
 	// Register Settings

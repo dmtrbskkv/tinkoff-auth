@@ -1,11 +1,10 @@
 <?php
 
-namespace TinkoffAuth\View\WordPress;
+namespace TinkoffAuth\View\WordPress\Settings;
 
-use TinkoffAuth\View\AuthButton\AuthButton;
 use TinkoffAuth\View\Common\OptionSelect as OptionSelectAbstract;
 
-class OptionSelect extends WordPressComponent
+class OptionSelect extends WordPressSettingsComponent
 {
     const SELECT_HOOK_VALUES          = [
         'Самостоятельно расположить' => '',

@@ -1,8 +1,8 @@
 <?php
 
-namespace TinkoffAuth\View\WordPress;
+namespace TinkoffAuth\View\WordPress\Settings;
 
-class SettingInput extends WordPressComponent
+class SettingInput extends WordPressSettingsComponent
 {
 
     /**

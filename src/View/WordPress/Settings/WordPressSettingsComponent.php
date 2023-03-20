@@ -1,10 +1,10 @@
 <?php
 
-namespace TinkoffAuth\View\WordPress;
+namespace TinkoffAuth\View\WordPress\Settings;
 
 use TinkoffAuth\View\Component;
 
-abstract class WordPressComponent extends Component
+abstract class WordPressSettingsComponent extends Component
 {
     /**
      * @var string

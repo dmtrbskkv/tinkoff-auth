@@ -1,8 +1,8 @@
 <?php
 
-namespace TinkoffAuth\View\WordPress;
+namespace TinkoffAuth\View\WordPress\Settings;
 
-class CheckboxInput extends WordPressComponent
+class CheckboxInput extends WordPressSettingsComponent
 {
     /**
      * @return string
