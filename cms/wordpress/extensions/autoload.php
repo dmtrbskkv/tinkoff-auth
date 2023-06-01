@@ -40,6 +40,16 @@ function tinkoff_auth_ext_get_filenames() {
 			continue;
 		}
 
+		if ( is_dir( __DIR__ . '/' . $filename ) ) {
+			$filename = $filename . '/' . $filename . '.php';
+		}
+
+
+		$path = __DIR__ . '/' . $filename;
+		if ( ! file_exists( $path ) || is_dir( $path ) ) {
+			continue;
+		}
+
 		$extensions[] = $filename;
 	}
 
