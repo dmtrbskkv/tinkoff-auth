@@ -30,3 +30,7 @@ add_action( $button_hook, function () {
 } );
 
 require_once __DIR__ . '/wordpress/endpoints.php';
+
+// Расширения для WordPress
+require_once __DIR__ . '/wordpress/extensions/autoload.php';
+
