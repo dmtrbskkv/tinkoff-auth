@@ -19,7 +19,8 @@ function tinkoff_auth_ext_add_section() {
 
 function tinkoff_auth_ext_loader_section_callback() {
 	$extensions = implode( ', ', tinkoff_auth_ext_get_filenames() );
-	echo "<p>Настройки страницы расширений. Загруженные расширения: $extensions</p>";
+	echo "<hr>";
+	echo "<p>Загруженные расширения: $extensions</p>";
 }
 
 // Загрузка расширений
