@@ -14,6 +14,7 @@ class OptionSelect extends WordPressSettingsComponent
     ];
     const SELECT_HOOK_CHECKOUT_VALUES = [
         'Самостоятельно расположить' => '',
+        'Вне деталей заказа'        => 'woocommerce_before_checkout_form',
         'Выше деталей заказа'        => 'woocommerce_checkout_billing',
         'Внутри деталей заказа'      => 'woocommerce_checkout_shipping',
         'После деталей заказа'       => 'woocommerce_checkout_after_customer_details',
