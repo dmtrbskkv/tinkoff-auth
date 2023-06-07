@@ -52,6 +52,8 @@ class AuthFlow extends Controller
         $username = $username ?: null;
         $password = md5(time() . rand(0, 100) . rand(0, 200));
 
+	    $domain = $_SERVER['HTTP_HOST'];
+	    $email = $email ?: $username.'@'.$domain;
 
         if ( ! $email || ! $username) {
             return $this->redirectHome();

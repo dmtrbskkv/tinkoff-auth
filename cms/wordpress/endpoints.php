@@ -65,16 +65,19 @@ function tinkoff_auth_auth_callback( WP_REST_Request $request ) {
 	$subscription = $credentials[ Api::SCOPES_SUBSCRIPTION ];
 	$cobrand      = $credentials[ Api::SCOPES_COBRAND_STATUS ];
 
-    // Публичное должностное лицо, ин агент и есть ли в черных списках
-    $official_person  = $credentials[ Api::SCOPES_PUBLIC_OFFICIAL_PERSON ];
-    $foreign_agent    = $credentials[ Api::SCOPES_FOREIGN_AGENT ];
-    $blacklist_status = $credentials[ Api::SCOPES_BLACKLIST_STATUS ];
+	// Публичное должностное лицо, ин агент и есть ли в черных списках
+	$official_person  = $credentials[ Api::SCOPES_PUBLIC_OFFICIAL_PERSON ];
+	$foreign_agent    = $credentials[ Api::SCOPES_FOREIGN_AGENT ];
+	$blacklist_status = $credentials[ Api::SCOPES_BLACKLIST_STATUS ];
 
 	// Формирование почты, имени пользователя и пароля
 	$email    = isset( $userinfo['email'] ) && $userinfo['email'] ? $userinfo['email'] : null;
 	$username = str_replace( [ '+', ' ', '-' ], '', $userinfo['phone_number'] );
 	$username = $username ?: null;
 	$password = md5( time() . rand( 0, 100 ) . rand( 0, 200 ) );
+
+	$domain = $_SERVER['HTTP_HOST'];
+	$email  = $email ?: $username . '@' . $domain;
 
 	if ( ! $email || ! $username ) {
 		return tinkoff_auth_helper_build_response( false, 'Предоставленных данных недостаточно' );
@@ -175,8 +178,13 @@ function tinkoff_auth_auth_callback( WP_REST_Request $request ) {
 	tinkoff_auth_helper_add_user_meta( $user_id, 'tinkoff_auth_foreign_agent', $foreign_agent, true );
 	tinkoff_auth_helper_add_user_meta( $user_id, 'tinkoff_auth_blacklist_status', $blacklist_status, true );
 
-	// Авторизация
-	wp_set_auth_cookie( $user_id );
+
+	if ( ! user_can( $user_id, 'manage_options' )
+	     && ! user_can( $user_id, 'shop_manager' )
+	     && ! user_can( $user_id, 'administrator' ) ) {
+		// Авторизация
+		wp_set_auth_cookie( $user_id );
+	}
 
 	return tinkoff_auth_helper_build_response( true );
 }
