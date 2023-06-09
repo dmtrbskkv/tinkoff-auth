@@ -33,8 +33,8 @@ function tinkoff_auth_auth_callback( WP_REST_Request $request ) {
 	$tinkoff  = new Tinkoff();
 	$mediator = $tinkoff->auth();
 	if ( ! $mediator->getStatus() ) {
-//		return tinkoff_auth_helper_build_response( false, 'Ошибка авторизации' );
-		return tinkoff_auth_helper_build_response( false, $mediator->getMessage() );
+		return tinkoff_auth_helper_build_response( false, 'Ошибка авторизации' );
+//		return tinkoff_auth_helper_build_response( false, $mediator->getMessage() );
 	}
 
 	$credentials = $mediator->getPayload();
