@@ -10,14 +10,15 @@ class OptionSelect extends WordPressSettingsComponent
         'Самостоятельно расположить' => '',
         'Внутри формы регистрации'   => 'woocommerce_login_form',
         'Ниже формы регистрации'     => 'woocommerce_login_form_end',
-        'Выше формы регистрации'     => 'woocommerce_login_form_start'
+        'Выше формы регистрации'     => 'woocommerce_login_form_start',
+        'До формы регистрации'     => 'woocommerce_before_customer_login_form'
     ];
     const SELECT_HOOK_CHECKOUT_VALUES = [
         'Самостоятельно расположить' => '',
-        'Вне деталей заказа'        => 'woocommerce_before_checkout_form',
         'Выше деталей заказа'        => 'woocommerce_checkout_billing',
         'Внутри деталей заказа'      => 'woocommerce_checkout_shipping',
         'После деталей заказа'       => 'woocommerce_checkout_after_customer_details',
+        'До деталей заказа'        => 'woocommerce_before_checkout_form',
     ];
 
     private $values;
