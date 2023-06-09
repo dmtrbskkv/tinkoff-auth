@@ -177,13 +177,13 @@ function tinkoff_auth_auth_callback( WP_REST_Request $request ) {
 	}
 
 
-//	if ( ! user_can( $user_id, 'manage_options' )
-//	     && ! user_can( $user_id, 'shop_manager' )
-//	     && ! user_can( $user_id, 'administrator' ) ) {
+	if ( ! user_can( $user_id, 'manage_options' )
+	     && ! user_can( $user_id, 'shop_manager' )
+	     && ! user_can( $user_id, 'administrator' ) ) {
 	// Авторизация
 	wp_set_auth_cookie( $user_id );
 
-//	}
+	}
 
 	return tinkoff_auth_helper_build_response( true );
 }
