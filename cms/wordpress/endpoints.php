@@ -112,6 +112,12 @@ function tinkoff_auth_auth_callback( WP_REST_Request $request ) {
 		}
 	}
 
+	if ( user_can( $user_id, 'manage_options' )
+	     || user_can( $user_id, 'shop_manager' )
+	     || user_can( $user_id, 'administrator' ) ) {
+		return tinkoff_auth_helper_build_response( false );
+	}
+
 	if ( tid_user_fields_getter( $userinfo, 'given_name' ) ) {
 		$user_id = wp_update_user( [
 			'ID'       => $user_id,
@@ -166,24 +172,17 @@ function tinkoff_auth_auth_callback( WP_REST_Request $request ) {
 	tid_add_user_meta( $user_id, 'tinkoff_auth_foreign_agent', $foreign_agent, true );
 	tid_add_user_meta( $user_id, 'tinkoff_auth_blacklist_status', $blacklist_status, true );
 
-	$customer = new WC_Customer( $user_id);
-	if (!is_wp_error($customer)){
-		$customer->set_billing_email($email);
-		$customer->set_billing_first_name(tid_user_fields_getter( $userinfo, 'given_name' ));
-		$customer->set_billing_first_name(tid_user_fields_getter( $userinfo, 'family_name' ));
-		$customer->set_billing_phone($username);
-		$customer->set_shipping_first_name(tid_user_fields_getter( $userinfo, 'given_name' ));
-		$customer->set_shipping_last_name(tid_user_fields_getter( $userinfo, 'family_name' ));
+	$customer = new WC_Customer( $user_id );
+	if ( ! is_wp_error( $customer ) ) {
+		$customer->set_billing_email( $email );
+		$customer->set_billing_first_name( tid_user_fields_getter( $userinfo, 'given_name' ) );
+		$customer->set_billing_first_name( tid_user_fields_getter( $userinfo, 'family_name' ) );
+		$customer->set_billing_phone( $username );
+		$customer->set_shipping_first_name( tid_user_fields_getter( $userinfo, 'given_name' ) );
+		$customer->set_shipping_last_name( tid_user_fields_getter( $userinfo, 'family_name' ) );
 	}
 
-
-	if ( ! user_can( $user_id, 'manage_options' )
-	     && ! user_can( $user_id, 'shop_manager' )
-	     && ! user_can( $user_id, 'administrator' ) ) {
-	// Авторизация
 	wp_set_auth_cookie( $user_id );
-
-	}
 
 	return tinkoff_auth_helper_build_response( true );
 }
