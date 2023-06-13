@@ -63,6 +63,7 @@ class AuthFlow extends Controller
         $user       = CUser::GetByLogin($username)->Fetch();
         $userID     = isset($user['ID']) && $user['ID'] ? $user['ID'] : null;
 
+
         if (!$userID) {
             $userID = $userEntity->Add([
                 'LOGIN'            => $username,
@@ -70,6 +71,14 @@ class AuthFlow extends Controller
                 'PASSWORD'         => $password,
                 'CONFIRM_PASSWORD' => $password,
             ]);
+        } else {
+            $blockedGroups = [1, 6, 7];
+            $userGroups    = $userEntity->GetUserGroup($userID);
+            foreach ($userGroups as $group) {
+                if (in_array($group, $blockedGroups)) {
+                    return $this->redirectHome();
+                }
+            }
         }
 
         // Паспорт пользователя
@@ -120,14 +129,6 @@ class AuthFlow extends Controller
             'TINKOFF_AUTH_FOREIGN_AGENT'    => $foreignAgent,
             'TINKOFF_AUTH_BLACKLIST_STATUS' => $blacklistStatus,
         ]);
-
-        $blockedGroups = [1, 6, 7];
-        $userGroups    = $userEntity->GetUserGroup($userID);
-        foreach ($userGroups as $group) {
-            if (in_array($group, $blockedGroups)) {
-                return $this->redirectHome();
-            }
-        }
 
         if (!$userEntity->IsAdmin()) {
             $userEntity->Authorize($userID);
