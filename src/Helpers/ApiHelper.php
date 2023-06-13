@@ -17,12 +17,12 @@ class ApiHelper
      */
     public static function validateScopes(array $userScopes = [], array $scopeForCompare = [])
     {
-        if ( ! $userScopes || ! $scopeForCompare) {
+        if (!$userScopes || !$scopeForCompare) {
             return false;
         }
 
         foreach ($scopeForCompare as $scope) {
-            if ( ! in_array($scope, $userScopes)) {
+            if (!in_array($scope, $userScopes)) {
                 return false;
             }
         }

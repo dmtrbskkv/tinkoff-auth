@@ -90,7 +90,7 @@ class Api extends BaseFacade
         $authParams = $this->getAuthParams($validateState);
         $code       = isset($authParams['code']) && $authParams['code'] ? $authParams['code'] : null;
 
-        if ( ! $code) {
+        if (!$code) {
             return [];
         }
 
@@ -137,7 +137,7 @@ class Api extends BaseFacade
         $apiConfig  = ApiConfig::getInstance();
 
         $accessToken = isset($accessToken) && $accessToken ? $accessToken : $authConfig->get(Auth::ACCESS_TOKEN);
-        if ( ! $accessToken) {
+        if (!$accessToken) {
             return ApiFormatter::formatUserinfoFull();
         }
 
@@ -149,7 +149,7 @@ class Api extends BaseFacade
             $scopes = isset($neededScopes[$index]) && $neededScopes[$index] ? $neededScopes[$index] : [];
 
             $userHasNeededScopes = $this->validateScopes($scopes);
-            if ( ! $userHasNeededScopes) {
+            if (!$userHasNeededScopes) {
                 continue;
             }
 
@@ -182,7 +182,7 @@ class Api extends BaseFacade
      */
     public function introspect($accessToken = null)
     {
-        if ( ! $accessToken) {
+        if (!$accessToken) {
             $authConfig  = Auth::getInstance();
             $accessToken = $authConfig->get(Auth::ACCESS_TOKEN);
         }
@@ -211,7 +211,7 @@ class Api extends BaseFacade
 
         if ($validateState) {
             $stateService = new State();
-            if ( ! $stateService->validate($state)) {
+            if (!$stateService->validate($state)) {
                 return [];
             }
         }
@@ -254,7 +254,7 @@ class Api extends BaseFacade
     {
         $authConfig = Auth::getInstance();
 
-        if ( ! $accessToken) {
+        if (!$accessToken) {
             $accessToken = $authConfig->get(Auth::ACCESS_TOKEN);
         }
 
