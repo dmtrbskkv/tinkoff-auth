@@ -18,8 +18,6 @@ class Api extends BaseFacade
      * Необходимые scopes для получения профиля пользователя
      */
     const SCOPES_FOR_AUTH = [
-        'email',
-        'profile',
         'phone'
     ];
 

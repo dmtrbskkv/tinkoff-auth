@@ -68,9 +68,7 @@ class Api extends Config
     {
         return [
             self::SCOPES_USERINFO               => [
-                'profile',
                 'phone',
-                'email',
             ],
             self::SCOPES_PASSPORT_SHORT         => [
                 'opensme/individual/passport-short/get'
