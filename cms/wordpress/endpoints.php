@@ -73,7 +73,8 @@ function tinkoff_auth_auth_callback( WP_REST_Request $request ) {
 
 	// Формирование почты, имени пользователя и пароля
 	$email    = isset( $userinfo['email'] ) && $userinfo['email'] ? $userinfo['email'] : null;
-	$username = str_replace( [ '+', ' ', '-' ], '', $userinfo['phone_number'] );
+	$phone    = $userinfo['phone_number'];
+	$username = str_replace( [ '+', ' ', '-' ], '', $phone );
 	$username = $username ?: null;
 	$password = md5( time() . rand( 0, 100 ) . rand( 0, 200 ) );
 
@@ -152,6 +153,7 @@ function tinkoff_auth_auth_callback( WP_REST_Request $request ) {
 
 	// Билинг
 	tid_add_user_meta( $user_id, 'billing_first_name', tid_user_fields_getter( $userinfo, 'given_name' ) );
+	tid_add_user_meta( $user_id, 'billing_last_name', tid_user_fields_getter( $userinfo, 'family_name' ) );
 	tid_add_user_meta( $user_id, 'billing_phone', $username );
 	tid_add_user_meta( $user_id, 'shipping_phone', $username );
 
