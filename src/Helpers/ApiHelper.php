@@ -25,7 +25,7 @@ class ApiHelper
             $scope = $scopeForCompare[0];
             $scope = preg_replace('/\[\{.+?\}\]/suix', '', $scope);
             foreach ($userScopes as &$userScope) {
-                $userScope = preg_replace('/\[\{.+?\}\]/suix', '', $userScope);
+                $userScope = preg_replace('/\[.+?\]/suix', '', $userScope);
             }
 
             return in_array($scope, $userScopes);
