@@ -145,8 +145,8 @@ class Api extends BaseFacade
         $neededScopes = $apiConfig->getScopes();
 
         $userinfoFull = [];
-        foreach ($routes as $index => $route) {
-            $scopes = isset($neededScopes[$index]) && $neededScopes[$index] ? $neededScopes[$index] : [];
+        foreach ($routes as $scopeIndex => $route) {
+            $scopes = isset($neededScopes[$scopeIndex]) && $neededScopes[$scopeIndex] ? $neededScopes[$scopeIndex] : [];
 
             $userHasNeededScopes = $this->validateScopes($scopes);
             if (!$userHasNeededScopes) {
@@ -156,7 +156,7 @@ class Api extends BaseFacade
             $request = new Request();
             $request = $this->addBearerCredentials($request, $accessToken);
 
-            switch ($index) {
+            switch ($scopeIndex) {
                 case ApiConfig::SCOPES_USERINFO:
                     $response = $request->post($route, [
                         'client_id'     => $authConfig->get(Auth::CLIENT_ID),
@@ -167,7 +167,7 @@ class Api extends BaseFacade
                     $response = $request->request($route);
             }
 
-            $userinfoFull[$index] = $response->json();
+            $userinfoFull[$scopeIndex] = $response->json();
         }
 
         return ApiFormatter::formatUserinfoFull($userinfoFull);
