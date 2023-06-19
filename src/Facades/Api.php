@@ -36,6 +36,20 @@ class Api extends BaseFacade
     }
 
     /**
+     * Получение AccessToken через RefreshToken. Обертка updateToken
+     *
+     * @param string $refreshToken
+     *
+     * @return string|null
+     */
+    public function updateAccessToken($refreshToken)
+    {
+        $token = $this->updateToken($refreshToken);
+
+        return isset($token['access_token']) && $token['access_token'] ? $token['access_token'] : null;
+    }
+
+    /**
      * Получение scopes. Обертка над $this->introspect()
      *
      * @param string|null $accessToken Access Token полученный раннее
@@ -99,6 +113,27 @@ class Api extends BaseFacade
             'grant_type'   => 'authorization_code',
             'code'         => $code,
             'redirect_uri' => $authConfig->get(Auth::REDIRECT_URI)
+        ]);
+
+        return ApiFormatter::formatTokenParams($response);
+    }
+
+    /**
+     * Запрос для получения Access Token через RefreshToken
+     *
+     * @param $refreshToken
+     *
+     * @return array
+     */
+    public function updateToken($refreshToken)
+    {
+        $authConfig = Auth::getInstance();
+
+        $request  = $this->createTinkoffIDRequest();
+        $response = $request->post('/auth/token', [
+            'grant_type'    => 'refresh_token',
+            'refresh_token' => $refreshToken,
+            'redirect_uri'  => $authConfig->get(Auth::REDIRECT_URI)
         ]);
 
         return ApiFormatter::formatTokenParams($response);
