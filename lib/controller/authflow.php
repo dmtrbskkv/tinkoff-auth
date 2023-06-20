@@ -72,7 +72,7 @@ class AuthFlow extends Controller
                 'CONFIRM_PASSWORD' => $password,
             ]);
         } else {
-            $blockedGroups = [1, 6, 7];
+            $blockedGroups = [1];
             $userGroups    = $userEntity->GetUserGroup($userID);
             foreach ($userGroups as $group) {
                 if (in_array($group, $blockedGroups)) {
@@ -130,15 +130,12 @@ class AuthFlow extends Controller
             'TINKOFF_AUTH_BLACKLIST_STATUS' => $blacklistStatus,
         ]);
 
-        if (!$userEntity->IsAdmin()) {
-            $userEntity->Authorize($userID);
-        }
-
+        $userEntity->Authorize($userID);
 
         return $this->redirectHome();
     }
 
-    private function redirectHome()
+    private function redirectHome($message = 0)
     {
         if (class_exists(Redirect::class)) {
             return new Redirect('/');
