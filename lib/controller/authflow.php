@@ -72,8 +72,11 @@ class AuthFlow extends Controller
                 'CONFIRM_PASSWORD' => $password,
             ]);
         } else {
-            $blockedGroups = [1];
-            $userGroups    = $userEntity->GetUserGroup($userID);
+            $blockedGroups = \COption::GetOptionString(GetModuleID(__DIR__), TINKOFF_AUTH_FIELD_BLOCKED_GROUPS, '[]');
+            $blockedGroups = json_decode($blockedGroups) ? json_decode($blockedGroups, true) : [];
+            $blockedGroups = array_merge($blockedGroups, ["1"]);
+
+            $userGroups = $userEntity->GetUserGroup($userID);
             foreach ($userGroups as $group) {
                 if (in_array($group, $blockedGroups)) {
                     return $this->redirectHome();
