@@ -150,7 +150,7 @@ class Api extends Config
             self::SCOPES_PUBLIC_OFFICIAL_PERSON => 'https://business.tinkoff.ru/openapi/api/v1/individual/pdl/status',
             self::SCOPES_FOREIGN_AGENT          => 'https://business.tinkoff.ru/openapi/api/v1/individual/foreignagent/status',
             self::SCOPES_BLACKLIST_STATUS       => 'https://business.tinkoff.ru/openapi/api/v1/individual/blacklist/status',
-            self::SCOPES_BANK_ACCOUNTS          => 'https://business.tinkoff.ru/openapi/api/v3/bank-accounts',
+            self::SCOPES_BANK_ACCOUNTS          => 'https://business.tinkoff.ru/openapi/api/v4/bank-accounts',
             self::SCOPES_COMPANY_INFO           => 'https://business.tinkoff.ru/openapi/api/v1/company',
             self::SCOPES_BANK_STATEMENTS        => 'https://business.tinkoff.ru/openapi/api/v1/statement',
         ];
