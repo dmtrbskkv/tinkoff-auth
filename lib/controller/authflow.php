@@ -9,7 +9,9 @@ use Bitrix\Main\Engine\Response\Redirect;
 use CUser;
 use CModule;
 use TinkoffAuth\Config\Api;
+use TinkoffAuth\Config\TIDModule;
 use TinkoffAuth\Facades\Tinkoff;
+use TinkoffAuth\Services\Logger\RequestLogger;
 
 
 class AuthFlow extends Controller
@@ -32,6 +34,9 @@ class AuthFlow extends Controller
 
     public function signAction()
     {
+        TIDModule::getInstance()->push(TIDModule::ENABLE_LOG, true);
+        RequestLogger::currentRequest();
+
         if (!CModule::IncludeModule("tinkoffid")) {
             return $this->redirectHome();
         }

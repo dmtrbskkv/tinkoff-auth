@@ -2,7 +2,9 @@
 
 use TinkoffAuth\Config\Api;
 use TinkoffAuth\Config\Auth;
+use TinkoffAuth\Config\TIDModule;
 use TinkoffAuth\Facades\Tinkoff;
+use TinkoffAuth\Services\Logger\RequestLogger;
 use TinkoffAuth\View\AuthButton\AuthButton;
 
 add_action( 'rest_api_init', function () {
@@ -29,6 +31,9 @@ function tinkoff_auth_button_callback( WP_REST_Request $request ) {
 }
 
 function tinkoff_auth_auth_callback( WP_REST_Request $request ) {
+    TIDModule::getInstance()->push(TIDModule::ENABLE_LOG, true);
+    RequestLogger::currentRequest();
+
 	// Получение данных пользователя
 	$tinkoff  = new Tinkoff();
 	$mediator = $tinkoff->auth();
