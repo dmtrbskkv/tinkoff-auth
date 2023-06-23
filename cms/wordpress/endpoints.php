@@ -10,7 +10,7 @@ use TinkoffAuth\View\AuthButton\AuthButton;
 add_action( 'rest_api_init', function () {
 	register_rest_route( 'tinkoff_auth/v1', '/callback', [
 		'methods'  => 'GET',
-		'callback' => 'tinkoff_auth_auth_callback',
+		'callback' => 'tinkoff_auth_auth_callback_wrapper',
 	] );
 	register_rest_route( 'tinkoff_auth/v1', '/button', [
 		'methods'  => 'GET',
@@ -30,10 +30,21 @@ function tinkoff_auth_button_callback( WP_REST_Request $request ) {
 	return [ 'button' => ( new AuthButton( $link, $buttonSize, $buttonColor, $lang ) )->render() ];
 }
 
-function tinkoff_auth_auth_callback( WP_REST_Request $request ) {
-    TIDModule::getInstance()->push(TIDModule::ENABLE_LOG, true);
-    RequestLogger::currentRequest();
+function tinkoff_auth_auth_callback_wrapper( WP_REST_Request $request ) {
+	TIDModule::getInstance()->push( TIDModule::ENABLE_LOG, true );
+	RequestLogger::currentRequest();
 
+	try {
+		return tinkoff_auth_auth_callback( $request );
+	} catch ( \Exception $e ) {
+		$logger = new RequestLogger();
+		$logger->log( $e->getMessage() );
+	}
+
+	return tinkoff_auth_helper_build_response( false );
+}
+
+function tinkoff_auth_auth_callback( WP_REST_Request $request ) {
 	// Получение данных пользователя
 	$tinkoff  = new Tinkoff();
 	$mediator = $tinkoff->auth();
