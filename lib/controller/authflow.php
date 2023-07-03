@@ -34,6 +34,8 @@ class AuthFlow extends Controller
 
     public function signAction()
     {
+        global $USER;
+
         TIDModule::getInstance()->push(TIDModule::ENABLE_LOG, true);
         RequestLogger::currentRequest();
 
@@ -64,7 +66,7 @@ class AuthFlow extends Controller
             return $this->redirectHome();
         }
 
-        $userEntity = new CUser;
+        $userEntity = new CUser();
         $user       = CUser::GetByLogin($username)->Fetch();
         $userID     = isset($user['ID']) && $user['ID'] ? $user['ID'] : null;
 
@@ -138,13 +140,16 @@ class AuthFlow extends Controller
             'TINKOFF_AUTH_BLACKLIST_STATUS' => $blacklistStatus,
         ]);
 
-        $userEntity->Authorize($userID);
+//        (new CUser())->Authorize($userID);
+        $USER->Authorize($userID);
 
         return $this->redirectHome();
     }
 
-    private function redirectHome($message = 0)
+    private function redirectHome($message = null)
     {
+        setcookie("tid_error_message", $message, time() + 3600);
+
         if (class_exists(Redirect::class)) {
             return new Redirect('/');
         }
