@@ -6,9 +6,11 @@ use Bitrix\Main\Engine\Controller;
 use Bitrix\Main\Engine\ActionFilter\Csrf;
 use Bitrix\Main\Engine\ActionFilter\Authentication;
 use Bitrix\Main\Engine\Response\Redirect;
+use Bitrix\Main\Event;
 use CUser;
 use CModule;
 use TinkoffAuth\Config\Api;
+use TinkoffAuth\Config\Auth;
 use TinkoffAuth\Config\TIDModule;
 use TinkoffAuth\Facades\Tinkoff;
 use TinkoffAuth\Services\Logger\Logger;
@@ -17,6 +19,7 @@ use TinkoffAuth\Services\Logger\RequestLogger;
 
 class AuthFlow extends Controller
 {
+    private $moduleID = 'tinkoffid';
 
     /**
      * @return array[]
@@ -37,6 +40,8 @@ class AuthFlow extends Controller
     {
         global $USER;
 
+        $this->saveEventCreation('OnBeforeTIDAuth');
+
         TIDModule::getInstance()->push(TIDModule::ENABLE_LOG, true);
         RequestLogger::currentRequest();
 
@@ -51,8 +56,14 @@ class AuthFlow extends Controller
 
         $credentials = $mediator->getPayload();
         $userinfo    = $credentials[Api::SCOPES_USERINFO];
-        $name        = $userinfo['given_name'];
-        $lastName    = $userinfo['family_name'];
+
+        $this->saveEventCreation('OnTIDAuth', [
+            'userinfo'     => $userinfo,
+            'access_token' => (Auth::getInstance())->get(Auth::ACCESS_TOKEN)
+        ]);
+
+        $name     = $userinfo['given_name'];
+        $lastName = $userinfo['family_name'];
 
         // Формирование почты, имени пользователя и пароля
         $email    = isset($userinfo['email']) && $userinfo['email'] ? $userinfo['email'] : null;
@@ -142,6 +153,12 @@ class AuthFlow extends Controller
             'TINKOFF_AUTH_BLACKLIST_STATUS' => $blacklistStatus,
         ]);
 
+        $this->saveEventCreation('OnAfterTIDAuth', [
+            'user_id'      => $userID,
+            'userinfo'     => $userinfo,
+            'access_token' => (Auth::getInstance())->get(Auth::ACCESS_TOKEN)
+        ]);
+
 //        (new CUser())->Authorize($userID);
         $USER->Authorize($userID);
 
@@ -163,5 +180,15 @@ class AuthFlow extends Controller
 
         header('Location: /');
         exit();
+    }
+
+    private function saveEventCreation($eventName, $data = [])
+    {
+        if (!class_exists(Event::class)) {
+            return;
+        }
+
+        $event = new Event($this->moduleID, $eventName, $data);
+        $event->send();
     }
 }

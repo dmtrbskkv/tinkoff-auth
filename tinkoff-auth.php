@@ -3,7 +3,7 @@
 Plugin Name: TID
 Plugin URI: https://www.tinkoff.ru/tinkoff-id/
 Description: Плагин авторизации через Тинькофф ID
-Version: 0.6
+Version: 0.6.1
 Author: Tinkoff ID Team
 Author URI: https://www.tinkoff.ru/tinkoff-id/
 */
