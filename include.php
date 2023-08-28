@@ -14,6 +14,8 @@ define('TINKOFF_AUTH_FIELD_BUTTON_LANG', 'tinkoff_auth_button_lang');
 
 
 $host = $_SERVER['HTTP_HOST'];
+$host = str_replace([':80', ':433'], '', $host);
+
 $uri  = '/bitrix/services/main/ajax.php?action=tinkoffid.authflow.sign';
 
 $authConfig = Auth::getInstance();
